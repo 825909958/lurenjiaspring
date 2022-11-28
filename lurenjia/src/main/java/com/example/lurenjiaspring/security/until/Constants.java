@@ -1,5 +1,4 @@
 package com.example.lurenjiaspring.security.until;
-package com.ruoyi.common.constant;
 
 /**
  * 通用常量信息

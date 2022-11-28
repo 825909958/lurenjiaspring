@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.aop.mvc;
+package com.example.lurenjiaspring.aop.adviceuntil;
 
 import com.example.lurenjiaspring.entity.Student;
 import lombok.extern.slf4j.Slf4j;

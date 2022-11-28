@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util.reflectutil.enumutil;
+package com.example.lurenjiaspring.util.reflectutil.extentityinformation;
 
 /**
  * @author THT

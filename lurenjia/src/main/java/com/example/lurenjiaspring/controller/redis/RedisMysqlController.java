@@ -1,14 +1,14 @@
-package com.example.lurenjiaspring.Controller.redis;
+package com.example.lurenjiaspring.controller.redis;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.lurenjiaspring.constants.Constants;
 import com.example.lurenjiaspring.domain.redis.UserService;
-import com.example.lurenjiaspring.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -21,33 +21,37 @@ import java.util.Map;
  */
 @RestController
 public class RedisMysqlController {
-    @Resource
-    UserService userService;
-    @Autowired
-    RedisTemplate<String, String> redisTemplate;
 
-    @RequestMapping("/redis/updateUser")
-    public void updateData(String userName) {
-        User user = new User();
-        user.setUserName(userName);
-        Integer integer = userService.updateUser(user);
-        if (integer > 0) {
-            redisTemplate.delete(Constants.userMark + "1008");
-        }
+    @Resource
+    private UserService userService;
+
+    // 注入两个会被覆盖，那个被那个覆盖不清楚，所以不要这么写
+    @Resource
+    private RedisTemplate redisTemplate;
+
+    @RequestMapping("/redis/updateUser/{userName}")
+    public void updateData(@PathVariable String userName) throws Exception {
+        //Thread.sleep(100000);
+        userService.updateUser(userName,0);
+
+
     }
 
     @RequestMapping("/redis/getUser")
-    public String getUserData() throws InterruptedException {
-        Object user_name = redisTemplate.opsForHash()
-                .get(Constants.userMark + "1008", "user_name");
-        if (!ObjectUtils.isEmpty(user_name)) {
-            return user_name.toString();
+    public Object getUserData() throws InterruptedException {
+        Map<Object, Object> entries = redisTemplate.opsForHash()
+                .entries(Constants.userMark + "12");
+        if (!ObjectUtils.isEmpty(entries)) {
+            return JSONObject.toJSON(entries);
         }
-        Map<String, String> map = userService.selcetUserById(Long.parseLong("1008"));
-        Thread.sleep(10000);
+        Map<String, Object> map = userService.selcetUserById(Long.parseLong("12"));
+//        Thread.sleep(10000);
+        // 序列化时long不能转换成string,java.lang.Integer cannot be cast to java.lang.String,所以不用默认的序列化工具
         map.remove("user_id");
-        redisTemplate.opsForHash().putAll(Constants.userMark + "1008", map);
-        return (String) map.get("user_name");
+        map.remove("blance");
+        //map.remove("")
+        redisTemplate.opsForHash().putAll(Constants.userMark + "12", map);
+        return JSONObject.toJSON(map);
     }
 
     /**

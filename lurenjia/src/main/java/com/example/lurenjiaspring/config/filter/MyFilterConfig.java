@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.Controller.countpeople;
+package com.example.lurenjiaspring.config.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;

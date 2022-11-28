@@ -7,11 +7,11 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleMqConfig {
     // one simple
-    public static final String QUEUE_NAME = "springboot-simple-queue";
+    public static final String SIMPLE_QUEUE = "springboot-simple-queue";
 
     // two 发布订阅fanout
     public static final String QUEUE_NAME1 = "springboot-fanout-queue1";
-    public static final String QUEUE_NAME2 = "springboot-fanout-queue2";
+    //public static final String QUEUE_NAME2 = "springboot-fanout-queue2";
     public static final String EXCHANGE_NAME1 = "springboot-fanout-exchange";
 
     /**
@@ -20,7 +20,7 @@ public class SimpleMqConfig {
      */
     @Bean
     public Queue simpleQueue() {
-        return new Queue(QUEUE_NAME, true, false, false);
+        return new Queue(SIMPLE_QUEUE, true, false, false);
     }
 
     /**
@@ -32,11 +32,11 @@ public class SimpleMqConfig {
         return new Queue(QUEUE_NAME1,true,false,false);
     }
 
-    //fanout队列2
-    @Bean
-    public Queue queue2(){
-        return new Queue(QUEUE_NAME2,true,false,false);
-    }
+    ////fanout队列2
+    //@Bean
+    //public Queue queue2(){
+    //    return new Queue(QUEUE_NAME2,true,false,false);
+    //}
 
     //fanout交换机
     @Bean
@@ -51,10 +51,10 @@ public class SimpleMqConfig {
     }
 
     //fanout交换机和队列2绑定
-    @Bean
-    public Binding binding2(FanoutExchange fanoutExchange,Queue queue2){
-        return BindingBuilder.bind(queue2).to(fanoutExchange);
-    }
+    //@Bean
+    //public Binding binding2(FanoutExchange fanoutExchange,Queue queue2){
+    //    return BindingBuilder.bind(queue2).to(fanoutExchange);
+    //}
 
     /**
      * three (Topic模式)两个队列绑定不同类型的routingKey
@@ -62,7 +62,7 @@ public class SimpleMqConfig {
     public static final String QUEUE_NAME3 = "springboot-topic-queue1";
     public static final String QUEUE_NAME4 = "springboot-topic-queue2";
 
-    public static final String EXCHANGE_NAME2 = "springboot-topic-exchange";
+    public static final String  EXCHANGE_NAME2 = "springboot-topic-exchange";
     //topic队列1
     @Bean
     public Queue queue3(){
@@ -86,6 +86,11 @@ public class SimpleMqConfig {
     public Binding binding3(TopicExchange topicExchange,Queue queue3){
         return BindingBuilder.bind(queue3).to(topicExchange).with("order.*");
     }
+//
+//    @Bean
+//    public Binding binding5(TopicExchange topicExchange,Queue queue3){
+//        return BindingBuilder.bind(queue3).to(topicExchange).with("");
+//    }
 
     //topic交换机和队列4的绑定
     @Bean

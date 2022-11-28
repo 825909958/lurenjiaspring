@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.controller.verify;
+package com.example.lurenjiaspring.controller.verify.configdemo;
 
 import com.example.lurenjiaspring.entity.UserDb;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,15 +32,15 @@ public class DemoController {
     //private RedisTemplate<String, Object> restTemplate;
 
     @Autowired
-    private Map<String, RedisTemplate> restTemplate;
+    private Map<String, RedisTemplate> redisTemplateMap;
 
 
     @PostConstruct
     public void a() {
-        System.out.println("context.getBean(\"redisTemplateLocal\") = " + context.getBean("redisTemplateLocal"));
-        System.out.println("context.getBean(\"redisTemplateLocal\") = " + context1.getBean("redisTemplateLocal"));
-
-        System.out.println("restTemplate = " + restTemplate);
+        //System.out.println("context.getBean(\"redisTemplateLocal\") = " + context.getBean("redisTemplate"));
+        //System.out.println("context.getBean(\"redisTemplateLocal\") = " + context1.getBean("redisTemplateLocal"));
+redisTemplateMap.forEach((x,y)-> System.out.println("key+ "+x+"value +"+y.hashCode()));
+        System.out.println("restTemplate = " + redisTemplateMap);
         //System.out.println("redisTemplateLocal = " + redisTemplateLocal);
     }
 

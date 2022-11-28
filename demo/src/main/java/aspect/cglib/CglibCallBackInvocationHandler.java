@@ -1,4 +1,4 @@
-package cglib;
+package aspect.cglib;
 
 import org.springframework.cglib.proxy.MethodInterceptor;
 import org.springframework.cglib.proxy.MethodProxy;
@@ -13,11 +13,11 @@ public class CglibCallBackInvocationHandler implements MethodInterceptor {
     }
     @Override
     public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
-        System.out.println("cglib before do ....");
+        System.out.println("aspect.cglib before do ....");
 
         Object result = method.invoke(target, objects);
 
-        System.out.println("cglib after do ......");
+        System.out.println("aspect.cglib after do ......");
 
         return result;
     }

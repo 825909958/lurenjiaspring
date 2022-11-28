@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util.reflectutil.enumutil;
+package com.example.lurenjiaspring.util.reflectutil.extentityinformation;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

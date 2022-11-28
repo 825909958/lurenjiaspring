@@ -1,4 +1,4 @@
-package aspect;
+package aspect.jdkproxy.entity;
 
 
 public class TestHyCommand implements ParentInterface {

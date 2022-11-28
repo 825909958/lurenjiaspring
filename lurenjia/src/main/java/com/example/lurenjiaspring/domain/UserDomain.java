@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class UserDomain implements IUserDomain{
+public class UserDomain implements IUserDomain {
     @Autowired
     private UserDao userDao;
 
@@ -26,30 +26,39 @@ public class UserDomain implements IUserDomain{
     @Autowired
     private ApplicationContext applicationContext;
 
-//    @Async
-    @Transactional(rollbackFor = Exception.class)
-    public Map<String, String> queryUserById(Long id) throws Exception {
-        Map<String, String> map = userDao.queryUserById(id);
+    //    @Async
+    //@Transactional(rollbackFor = Exception.class)
+    public Map<String, Object> queryUserById(Long id) throws Exception {
+        userDao.queryUserById(id);
 //        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
 //            Integer user = userDao.createUser(new UserDb("THT", "666"));
 ////            int a = 1 / 0;
 //        });
-        Integer user = userDao.createUser(new UserDb("THT", "777"));
-        UserDomain userDomain = (UserDomain)applicationContext.getBean("userDomain");
+        userDao.createUser(new UserDb("tht", "777", "123456"));
+        UserDomain userDomain = (UserDomain) applicationContext.getBean("userDomain");
+        // 事务request_new  里面事务回滚，外面事务继续执行不回滚
+        //try {
+        //    userDomain.noTransactional(id);
+        //} catch (Exception e) {
+        //    System.out.println(e+"qaq");
+        //}
+
         userDomain.noTransactional(id);
-        if (!CollectionUtils.isEmpty(map)) {
+        if (!Objects.isNull(userDomain)) {
             throw new ThtException("11");
         }
 //        voidCompletableFuture.join();
         return userDao.queryUserById(id);
     }
 
+
     @Override
-    @Transactional(rollbackFor = Exception.class, propagation = Propagation.NOT_SUPPORTED)
-    public Map<String, String> noTransactional(Long id) throws Exception {
-        Integer user = userDao.createUser(new UserDb("noTHT", "no666"));
-        Map<String, String> stringStringMap = userDao.queryUserById(id);
-        if (!CollectionUtils.isEmpty(stringStringMap)) {
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.NESTED)
+    //@Transactional(rollbackFor = Exception.class, propagation = Propagation.NOT_SUPPORTED)
+    public Map<String, Object> noTransactional(Long id) throws Exception {
+        userDao.createUser(new UserDb("noTHT", "no666"));
+        Map<String, Object> stringStringMap = userDao.queryUserById(id);
+        if (CollectionUtils.isEmpty(stringStringMap)) {
             throw new ThtException("11");
         }
         return stringStringMap;

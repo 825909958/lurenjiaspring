@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.aop.mvc;
+package com.example.lurenjiaspring.aop.adviceuntil;
 
 public enum ResultCode {
     SUCCESS("000000", "成功"),

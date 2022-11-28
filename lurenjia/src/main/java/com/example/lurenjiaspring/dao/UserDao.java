@@ -1,8 +1,9 @@
 package com.example.lurenjiaspring.dao;
 
-import com.example.lurenjiaspring.entity.User;
+import com.example.lurenjiaspring.entity.UserDb;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -10,9 +11,14 @@ import java.util.Map;
  */
 @Mapper
 public interface UserDao {
-    public Map<String, String> queryUserById(Long id);
-    Integer createUser(User user);
+    public Map<String, Object> queryUserById(Long id);
 
-    Integer updateUser(User user);
+    public UserDb queryUserByUserName(String userName);
+
+    public List<UserDb> queryUserTree();
+
+    Integer createUser(UserDb user);
+
+    Integer updateUser(UserDb user);
 
 }

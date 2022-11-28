@@ -1,39 +1,46 @@
 package com.example.lurenjiaspring.entity;
 
-public class User {
+import lombok.Data;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * @author THT
+ */
+@Data
+public class UserDb {
     Long userId;
+    Long id;
+    String age;
     String userName;
     String nickName;
-    public User(){
+    String password;
+    Long parentId;
+    private Integer version;
 
+    List<UserDb> children = new ArrayList<>();
+
+
+    public UserDb() {
+        if (version == null) {
+            version = 0;
+        }
     }
 
-    public User(String userName, String nickName) {
+    public UserDb(String userName, String nickName) {
         this.userName = userName;
         this.nickName = nickName;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
+    public UserDb(String userName, String nickName, String password) {
 
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+        String encode = bCryptPasswordEncoder.encode(password);
+        this.password = encode;
         this.userName = userName;
-    }
-
-    public String getNickName() {
-        return nickName;
-    }
-
-    public void setNickName(String nickName) {
         this.nickName = nickName;
     }
+
 }

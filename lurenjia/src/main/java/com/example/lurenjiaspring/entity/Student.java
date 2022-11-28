@@ -11,7 +11,6 @@ public class Student {
     public Integer age;
 
     public Student() {
-        System.out.println("i am a student");
     }
 
     public String getName() {

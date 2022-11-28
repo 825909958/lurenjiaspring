@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util.reflectutil.enumutil;
+package com.example.lurenjiaspring.util.reflectutil.extentityinformation;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

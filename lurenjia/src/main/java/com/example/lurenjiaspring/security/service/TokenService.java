@@ -1,24 +1,22 @@
-package com.ruoyi.framework.web.service;
+package com.example.lurenjiaspring.security.service;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-import com.ruoyi.common.constant.Constants;
-import com.ruoyi.common.core.domain.model.LoginUser;
-import com.ruoyi.common.core.redis.RedisCache;
-import com.ruoyi.common.utils.ServletUtils;
-import com.ruoyi.common.utils.StringUtils;
-import com.ruoyi.common.utils.ip.AddressUtils;
-import com.ruoyi.common.utils.ip.IpUtils;
-import com.ruoyi.common.utils.uuid.IdUtils;
+
+import com.example.lurenjiaspring.security.entity.LoginUser;
+import com.example.lurenjiaspring.security.until.*;
 import eu.bitwalker.useragentutils.UserAgent;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.commons.lang3.ObjectUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * token验证处理
@@ -75,7 +73,7 @@ public class TokenService
      */
     public void setLoginUser(LoginUser loginUser)
     {
-        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
+        if (ObjectUtils.isNotEmpty(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
         {
             refreshToken(loginUser);
         }
@@ -126,6 +124,7 @@ public class TokenService
             refreshToken(loginUser);
         }
     }
+
 
     /**
      * 刷新令牌有效期

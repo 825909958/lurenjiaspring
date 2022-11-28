@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.Controller.countpeople;
+package com.example.lurenjiaspring.config.filter;
 
 import org.springframework.stereotype.Component;
 
@@ -14,7 +14,7 @@ public class FilterDemo implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
             ServletException {
-        System.out.println(chain + "11111");
+//        System.out.println(chain + "11111");
         chain.doFilter(request, response);
     }
 

@@ -1,6 +1,6 @@
 package com.example.lurenjiaspring.config;
 
-import com.example.lurenjiaspring.config.GuoJiHua.Demo;
+import com.example.lurenjiaspring.config.guojihua.Demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -45,7 +45,8 @@ public class ConfigVerifyController {
         System.out.println(guoJiHua.getMessage("name", null, null));
         System.out.println(guoJiHua.getMessage("name", null, Locale.CHINA));
         //CHINA对应：zh_CN
-        System.out.println(guoJiHua.getMessage("name", new String[]{"0", "1", "2"}, Locale.UK)); //UK对应
+        System.out.println(guoJiHua.getMessage("name", new String[]{"0", "1", "2"},Locale.UK)); //UK对应
+        System.out.println(guoJiHua.getMessage("name", new String[]{"0", "1", "2"},"aaaa", Locale.UK)); //UK对应
 
     }
 }

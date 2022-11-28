@@ -1,4 +1,4 @@
-package cglib;
+package aspect.cglib;
 
 import org.springframework.cglib.proxy.Enhancer;
 
@@ -7,7 +7,7 @@ public class Test {
         public static void main(String[] args) {
             TargetAction targetAction = new TargetAction("demo1");
             CglibCallBackInvocationHandler handler = new CglibCallBackInvocationHandler(targetAction);
-// cglib 方式一
+// aspect.cglib 方式一
             Enhancer enhancer = new Enhancer();
             //设置代理什么类
             enhancer.setSuperclass(targetAction.getClass());

@@ -1,11 +1,11 @@
-import request from "@/utils/request";
+import request from '@/untils/request';
 
 // 登录
-export function login(data) {
-  return request("/user/login", "post", data);
+export function user(data) {
+  return request('/login', 'post', data);
 }
 
-// 退出登录
-export function logout(data) {
-  return request("/user/logout", "post", data);
+export function count(data) {
+  return request('/count', 'post', data);
 }
+

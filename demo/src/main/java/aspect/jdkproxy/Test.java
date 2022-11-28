@@ -1,7 +1,7 @@
-package jdkproxy;
+package aspect.jdkproxy;
 
-import aspect.ParentInterface;
-import aspect.TestHyCommand;
+import aspect.jdkproxy.entity.ParentInterface;
+import aspect.jdkproxy.entity.TestHyCommand;
 
 public class Test {
 

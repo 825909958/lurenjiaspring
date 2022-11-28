@@ -1,21 +1,36 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.lurenjiaspring.dao.UserDao">
 
-	<select id="queryUserById" parameterType="Long" resultType="java.util.Map">
-		select * from sys_user where user_id=#{id}
-	</select>
+    <select id="queryUserById" parameterType="Long" resultType="java.util.Map">
+        select *
+        from sys_user
+        where user_id = #{id}
+    </select>
 
-	<insert id="createUser" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
-		INSERT INTO `sys_user`
-		    (  `user_name`, `nick_name`)
-		VALUES ( #{userName}, #{nickName});
-	</insert>
+    <select id="queryUserByUserName" parameterType="String" resultType="com.example.lurenjiaspring.entity.UserDb">
+        select *
+        from sys_user
+        where user_name = #{userName}
+    </select>
 
-	<update id="updateUser" parameterType="User" useGeneratedKeys="true" keyProperty="userId">
-		update `sys_user` set user_name=#{userName} where user_id=1008
-	</update>
+    <insert id="createUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
+        INSERT INTO `sys_user`
+            (`user_name`, `nick_name`,password)
+        VALUES (#{userName}, #{nickName},#{password});
+    </insert>
+
+    	<update id="updateUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
+    		update `sys_user` set blance=blance-10, user_name=#{userName},version=version+1 where user_id=1008
+            and blance>10
+<!--                                                                                              and version=#{version}-->
+    	</update>
+
+    <select id="queryUserTree" resultType="com.example.lurenjiaspring.entity.UserDb">
+        select *
+        from a
+    </select>
 
 </mapper>

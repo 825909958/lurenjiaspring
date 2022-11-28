@@ -1,4 +1,4 @@
-package aspect;
+package aspect.jdkproxy.entity;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

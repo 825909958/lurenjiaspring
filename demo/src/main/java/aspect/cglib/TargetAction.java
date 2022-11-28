@@ -1,4 +1,4 @@
-package cglib;
+package aspect.cglib;
 
 
 public class TargetAction {
@@ -13,7 +13,7 @@ public class TargetAction {
 
 
     public String doSomething(){
-        System.out.println("cglib do proxy "+ info);
+        System.out.println("aspect.cglib do proxy "+ info);
 
         return "proxy "+info;
     }

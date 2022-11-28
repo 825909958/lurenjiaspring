@@ -1,31 +1,32 @@
-package designmode;
+package designmode.activiity;
 
 import designmode.instance.Fruit;
 
 import java.math.BigDecimal;
 
-public  class ActivityFruit extends Fruit {
+/**
+ * @author THT
+ */
+public interface ActivityFruit {
     /**
-     *折扣活动
-     *
-     * @param discount  折扣
-     * @return
+     * 折扣活动
+     * @param fruit 实例
+     * @param discount 折扣
+     * @param limitTime 限制时间
+     * @return BigDecimal
      */
-    public  BigDecimal discountActive(BigDecimal discount){
-        return BigDecimal.valueOf(0);
-    };
+    default void discountActive(Fruit fruit, BigDecimal discount, Long limitTime) {};
 
     /**
      * 满减活动
      *
-     * @param fullQuantity 满多少
+     * @param fruits 实例
+     * @param fullQuantity    满多少
      * @param reducedQuantity 减多少
-     * @return
+     * @return BigDecimal
      */
 
-    public  BigDecimal fullReducedQuantityActive(BigDecimal fullQuantity,BigDecimal reducedQuantity) {
-        return BigDecimal.valueOf(0);
-    }
+    default void fullReducedQuantityActive(Fruit[] fruits, BigDecimal fullQuantity, BigDecimal reducedQuantity) {};
 
 
 }

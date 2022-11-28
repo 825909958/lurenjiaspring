@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util;
+package com.example.lurenjiaspring.util.reflectutil.convertfieds;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 /**
  * 不利用反射实现转换某个对象的一些字段
- * 
+ *
  * @param <T>
  */
 public class CovertUtil<T extends CommonVO> {

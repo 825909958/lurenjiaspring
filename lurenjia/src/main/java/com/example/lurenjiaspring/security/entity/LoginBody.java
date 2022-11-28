@@ -1,10 +1,15 @@
-package com.ruoyi.common.core.domain.model;
+package com.example.lurenjiaspring.security.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * 用户登录对象
- * 
+ *
  * @author ruoyi
  */
+@Data
+@AllArgsConstructor
 public class LoginBody
 {
     /**

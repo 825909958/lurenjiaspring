@@ -1,2 +1,6 @@
-package com.example.lurenjiaspring.aop.readandwrite;public class DsType {
+package com.example.lurenjiaspring.aop.readandwrite;
+
+
+public enum DsType {
+    MASTER, SLAVE;
 }

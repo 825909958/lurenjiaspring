@@ -4,12 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.EnumerationIter;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IORuntimeException;
+import cn.hutool.core.io.resource.ClassPathResource;
+import cn.hutool.core.io.resource.FileResource;
+import cn.hutool.core.io.resource.NoResourceException;
+import cn.hutool.core.io.resource.Resource;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.ClassLoaderUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import org.apache.catalina.webresources.FileResource;
-import org.springframework.core.io.ClassPathResource;
 
 import java.io.BufferedReader;
 import java.io.IOException;

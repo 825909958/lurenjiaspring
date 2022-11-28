@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.config.GuoJiHua;
+package com.example.lurenjiaspring.config.guojihua;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

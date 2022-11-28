@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <plugins>
+<!--        <plugin interceptor="com.sinoservices.xframework.core.ibatis.MybatisSqlInterceptor"/>-->
+        <plugin interceptor="com.example.lurenjiaspring.aop.mybatis.MybatisSqlInterceptor"/>
+    </plugins>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://127.0.0.1:3306/ry-vue?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=UTC&amp;useSSL=true"/>		<!--配置自己需要连接的数据库-->
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+
+    <mappers>
+        <mapper resource="mapper/UserDao.xml" />
+    </mappers>
+</configuration>
+
+
+

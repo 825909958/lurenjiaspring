@@ -1,15 +1,15 @@
-package com.ruoyi.common.core.domain.model;
+package com.example.lurenjiaspring.security.entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Set;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ruoyi.common.core.domain.entity.SysUser;
 
 /**
  * 登录用户身份权限
- * 
+ *
  * @author ruoyi
  */
 public class LoginUser implements UserDetails
@@ -56,10 +56,21 @@ public class LoginUser implements UserDetails
      */
     private Set<String> permissions;
 
-    /**
-     * 用户信息
-     */
-    private SysUser user;
+    private String userName;
+
+    private String password;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getToken()
     {
@@ -75,23 +86,18 @@ public class LoginUser implements UserDetails
     {
     }
 
-    public LoginUser(SysUser user, Set<String> permissions)
-    {
-        this.user = user;
-        this.permissions = permissions;
-    }
 
     @JsonIgnore
     @Override
     public String getPassword()
     {
-        return user.getPassword();
+        return this.password;
     }
 
     @Override
     public String getUsername()
     {
-        return user.getUserName();
+        return getUserName();
     }
 
     /**
@@ -106,7 +112,7 @@ public class LoginUser implements UserDetails
 
     /**
      * 指定用户是否解锁,锁定的用户无法进行身份验证
-     * 
+     *
      * @return
      */
     @JsonIgnore
@@ -118,7 +124,7 @@ public class LoginUser implements UserDetails
 
     /**
      * 指示是否已过期的用户的凭据(密码),过期的凭据防止认证
-     * 
+     *
      * @return
      */
     @JsonIgnore
@@ -130,7 +136,7 @@ public class LoginUser implements UserDetails
 
     /**
      * 是否可用 ,禁用的用户不能身份验证
-     * 
+     *
      * @return
      */
     @JsonIgnore
@@ -210,15 +216,6 @@ public class LoginUser implements UserDetails
         this.permissions = permissions;
     }
 
-    public SysUser getUser()
-    {
-        return user;
-    }
-
-    public void setUser(SysUser user)
-    {
-        this.user = user;
-    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities()

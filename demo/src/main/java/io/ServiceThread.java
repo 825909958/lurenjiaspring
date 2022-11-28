@@ -9,11 +9,11 @@ import java.nio.charset.StandardCharsets;
 /**
  * 服务器端逻辑线程
  */
-public class LogicThread extends Thread {
+public class ServiceThread extends Thread {
     Socket socket;
     InputStream is;
     OutputStream os;
-    public LogicThread(Socket socket){
+    public ServiceThread(Socket socket){
         this.socket = socket;
         start(); //启动线程
     }
@@ -24,9 +24,10 @@ public class LogicThread extends Thread {
             //初始化流
             os = socket.getOutputStream();
             is = socket.getInputStream();
-            for(int i = 0;i < 3;i++){
+            for(;;){
                 //读取数据
                 int n = is.read(b);
+                //字节用string读取就可以了
                 String s = new String(b, StandardCharsets.UTF_8);
                 System.out.println(s);
                 ////逻辑处理
@@ -80,7 +81,7 @@ public class LogicThread extends Thread {
                 //获得连接
                 socket = serverSocket.accept();
                 //启动线程
-                new LogicThread(socket);
+                new ServiceThread(socket);
             }
         } catch (Exception e) {
             e.printStackTrace();

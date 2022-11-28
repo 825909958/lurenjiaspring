@@ -1,7 +1,7 @@
-package jdkproxy;
+package aspect.jdkproxy;
 
 
-import aspect.HystrixCommand;
+import aspect.jdkproxy.entity.HystrixCommand;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;

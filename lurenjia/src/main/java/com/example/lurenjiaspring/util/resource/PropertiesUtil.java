@@ -1,19 +1,32 @@
 package com.example.lurenjiaspring.util.resource;
 
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+
+import javax.annotation.PostConstruct;
 
 @Configuration
 @PropertySource("classpath:a.properties")
 @ConfigurationProperties(prefix = "tht")
-public class PropertiesUntil {
+@Data
+public class PropertiesUtil {
     String name;
     Integer age;
 
+@PostConstruct
+    public void a() {
+        System.out.println("name = " + name);
+        System.out.println("age = " + age);
+    }
+
     public static void main(String[] args) {
         //new ClassPathXmlApplicationContext();
-        new AnnotationConfigApplicationContext(PropertiesUntil.class);
+        //AnnotationConfigApplicationContext annotationConfigApplicationContext = new AnnotationConfigApplicationContext(PropertiesUtil.class, ConfigLoader.class);
+        //Object propertiesUtil = annotationConfigApplicationContext.getBean("propertiesUtil");
+        //System.out.println(propertiesUtil);
+        String tht = ConfigLoader.getValue("tht.name");
+        System.out.println("tht = " + tht);
     }
 }

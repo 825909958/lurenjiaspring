@@ -1,11 +1,9 @@
-package com.ruoyi.common.exception;
+package com.example.lurenjiaspring.security.exception;
 
-import com.ruoyi.common.utils.MessageUtils;
-import com.ruoyi.common.utils.StringUtils;
 
 /**
  * 基础异常
- * 
+ *
  * @author ruoyi
  */
 public class BaseException extends RuntimeException
@@ -64,14 +62,14 @@ public class BaseException extends RuntimeException
     public String getMessage()
     {
         String message = null;
-        if (!StringUtils.isEmpty(code))
-        {
-            message = MessageUtils.message(code, args);
-        }
-        if (message == null)
-        {
-            message = defaultMessage;
-        }
+//        if (!StringUtils.isEmpty(code))
+//        {
+//            message = MessageUtils.message(code, args);
+//        }
+//        if (message == null)
+//        {
+//            message = defaultMessage;
+//        }
         return message;
     }
 
