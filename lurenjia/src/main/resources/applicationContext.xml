@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+    <!-- 配置目标对象 -->
+    <bean id="userService" class="com.example.lurenjiaspring.aop.advice.service.UserServiceImpl"/>
+
+    <!-- 配置切面 -->
+    <bean id="firstAspect" class="com.example.lurenjiaspring.aop.advice.FirstAspect"/>
+
+    <aop:config>
+        <!-- 配置切入点 方法1 addUser-->
+        <aop:pointcut
+                expression="execution(* com.example.lurenjiaspring.aop.advice.service.UserService.addUser(..))"
+                id="pc001"/>
+        <!-- 配置切入点 方法2 updateUser-->
+        <aop:pointcut
+                expression="execution(* com.example.lurenjiaspring.aop.advice.service.UserService.updateUser(..))"
+                id="pc002"/>
+        <!-- 配置切入点 方法3 deleteUser-->
+        <aop:pointcut
+                expression="execution(* com.example.lurenjiaspring.aop.advice.service.UserService.deleteUser(..))"
+                id="pc003"/>
+
+        <!-- 配置切入点 方法4 queryUser-->
+        <aop:pointcut
+                expression="execution(* com.example.lurenjiaspring.aop.advice.service.UserService.queryUser(..))"
+                id="pc004"/>
+
+        <aop:pointcut id="pc005" expression="execution(public * *(..))"/>
+
+        <!-- 配置切面 -->
+        <aop:aspect ref="firstAspect">
+            <!-- 前置通知 -->
+            <aop:before method="before" pointcut-ref="pc001"/>
+            <!-- 环绕通知 -->
+            <aop:around method="around" pointcut-ref="pc002" />
+            <!-- 后置通知 -->
+            <aop:after-returning method="afterReturning" pointcut-ref="pc003" returning="result"/>
+            <!-- 最终通知 都织入pc003（deleteUser）中，看看后置和最终谁最后执行 -->
+            <aop:after method="after" pointcut-ref="pc003"/>
+            <!-- 异常通知 -->
+            <aop:after-throwing method="afterThrow" pointcut-ref="pc004" throwing="e"/>
+        </aop:aspect>
+
+    </aop:config>
+</beans>
