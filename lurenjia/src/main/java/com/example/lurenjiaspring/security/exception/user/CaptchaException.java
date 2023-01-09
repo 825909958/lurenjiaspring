@@ -3,7 +3,7 @@ package com.example.lurenjiaspring.security.exception.user;
 /**
  * 验证码错误异常类
  *
- * @author ruoyi
+ * @author tht
  */
 public class CaptchaException extends UserException
 {

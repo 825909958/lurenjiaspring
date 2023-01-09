@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * token验证处理
  *
- * @author ruoyi
+ * @author tht
  */
 @Component
 public class TokenService
@@ -54,7 +54,7 @@ public class TokenService
      */
     public LoginUser getLoginUser(HttpServletRequest request)
     {
-        // 获取请求携带的令牌
+        // 获取请求携带的令牌  redis存的键是uuid 给用户返回的是用jwt封装的uuid，进来解析得到uuid去redis获取值即可
         String token = getToken(request);
         if (StringUtils.isNotEmpty(token))
         {
@@ -103,7 +103,7 @@ public class TokenService
         loginUser.setToken(token);
         setUserAgent(loginUser);
         refreshToken(loginUser);
-
+// 对uuid进行生成jwt
         Map<String, Object> claims = new HashMap<>();
         claims.put(Constants.LOGIN_USER_KEY, token);
         return createToken(claims);

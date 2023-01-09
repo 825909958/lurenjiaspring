@@ -4,7 +4,7 @@ package com.example.lurenjiaspring.security.exception;
 /**
  * 基础异常
  *
- * @author ruoyi
+ * @author tht
  */
 public class BaseException extends RuntimeException
 {

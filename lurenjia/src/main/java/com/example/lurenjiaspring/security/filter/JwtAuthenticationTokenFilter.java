@@ -20,21 +20,18 @@ import java.io.IOException;
 /**
  * token过滤器 验证token有效性
  *
- * @author ruoyi
+ * @author THT
  */
 @Component
-public class JwtAuthenticationTokenFilter extends OncePerRequestFilter
-{
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private TokenService tokenService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         LoginUser loginUser = tokenService.getLoginUser(request);
-        if (ObjectUtils.isNotEmpty(loginUser) && ObjectUtils.isEmpty(SecurityUtils.getAuthentication()))
-        {
+        if (ObjectUtils.isNotEmpty(loginUser) && ObjectUtils.isEmpty(SecurityUtils.getAuthentication())) {
             tokenService.verifyToken(loginUser);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(loginUser, null, loginUser.getAuthorities());
             authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

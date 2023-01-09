@@ -3,7 +3,7 @@ package com.example.lurenjiaspring.security.exception;
 /**
  * 工具类异常
  *
- * @author ruoyi
+ * @author tht
  */
 public class UtilException extends RuntimeException
 {

@@ -3,7 +3,7 @@ package com.example.lurenjiaspring.security.until;
 /**
  * 通用常量信息
  *
- * @author ruoyi
+ * @author tht
  */
 public class Constants
 {

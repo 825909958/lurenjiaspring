@@ -1,36 +1,32 @@
 package com.entity;
 
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.Document;
-import org.springframework.data.elasticsearch.annotations.Field;
-import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.Arrays;
 
-@Document(indexName = "app_user")
+//@Document(indexName = "app_user")
 @Data
 public class AppUser extends App {
-    @Id
-    @Field(index = true, store = true, type = FieldType.Integer)
+    //@Id
+    //@Field(index = true, store = true, type = FieldType.Integer)
     public Integer id;
 
-    @Field(index = true, store = true, type = FieldType.Keyword)
+    //@Field(index = true, store = true, type = FieldType.Keyword)
     String name;
 
-    @Field(index = true, store = true, type = FieldType.Text, analyzer = "ik_smart")
+    //@Field(index = true, store = true, type = FieldType.Text, analyzer = "ik_smart")
     String email;
 
-    @Field(index = true, store = true, type = FieldType.Text, analyzer = "ik_smart")
+    //@Field(index = true, store = true, type = FieldType.Text, analyzer = "ik_smart")
     String phone;
 
-    @Field(index = true, store = true, type = FieldType.Text)
+    //@Field(index = true, store = true, type = FieldType.Text)
     String gender;
 
-    @Field(index = true, store = true, type = FieldType.Text)
+    //@Field(index = true, store = true, type = FieldType.Text)
     String password;
 
-    @Field(index = true, store = true, type = FieldType.Integer)
+    //@Field(index = true, store = true, type = FieldType.Integer)
     private Integer age;
 
     public Integer parentAge() {

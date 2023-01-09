@@ -16,6 +16,7 @@ import java.net.URLEncoder;
 public class IndexController
         //implements ApplicationContextAware
 {
+    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(IndexController.class);
 
 
     //@Override
@@ -41,7 +42,7 @@ public class IndexController
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        logger.error("tanht");
         HttpSession session = httpServletRequest.getSession();
         Object count = session.getServletContext().getAttribute("count");
         return "count : " + count;

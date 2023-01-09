@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 获取地址类
  *
- * @author ruoyi
+ * @author tht
  */
 public class AddressUtils {
     private static final Logger log = LoggerFactory.getLogger(AddressUtils.class);
@@ -26,7 +26,7 @@ public class AddressUtils {
         if (IpUtils.internalIp(ip)) {
             return "内网IP";
         }
-        //if (RuoYiConfig.isAddressEnabled())
+        //if (thtConfig.isAddressEnabled())
         {
             try {
                 String rspStr = HttpUtils.sendGet(IP_URL, "ip=" + ip + "&json=true", Constants.GBK);

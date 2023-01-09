@@ -1,4 +1,4 @@
-package com.example.PointCutDemoTest;
+package com.example.pointcutdemotest;
 
 import com.example.lurenjiaspring.LurenjiaspringApplication;
 import com.example.lurenjiaspring.aop.aspectj.PointCutDemo;

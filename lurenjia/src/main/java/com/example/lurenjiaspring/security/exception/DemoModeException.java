@@ -3,7 +3,7 @@ package com.example.lurenjiaspring.security.exception;
 /**
  * 演示模式异常
  *
- * @author ruoyi
+ * @author tht
  */
 public class DemoModeException extends RuntimeException
 {

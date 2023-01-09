@@ -3,7 +3,7 @@ package com.example.lurenjiaspring.security.exception;
 /**
  * 自定义异常
  *
- * @author ruoyi
+ * @author tht
  */
 public class CustomException extends RuntimeException
 {

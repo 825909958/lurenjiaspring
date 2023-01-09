@@ -5,7 +5,7 @@ import com.example.lurenjiaspring.security.exception.BaseException;
 /**
  * 用户信息异常类
  *
- * @author ruoyi
+ * @author tht
  */
 public class UserException extends BaseException
 {
