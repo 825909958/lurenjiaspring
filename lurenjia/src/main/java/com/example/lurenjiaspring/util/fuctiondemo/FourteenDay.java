@@ -32,8 +32,6 @@ public class FourteenDay {
                 throw new Exception("内部正则");
             }
         }
-
-
     }
 
     abstract class BasicValid {
