@@ -62,3 +62,7 @@ byte[] bytes1 = FileUtil.readBytes("test.pdf");
 JBoss 服务器的配置文件中定义的参数，例如在 standalone.xml 文件中设置的参数。
 Spring 的配置文件中指定的参数，例如使用 <jvm-args> 标签指定的参数。
 Maven 的 pom.xml 文件中指定的参数，例如使用 maven-compiler-plugin 插件指定的参数。
+
+12.多数据源大事物死锁问题
+
+13.不同的servlet支持的spring技术不一样。

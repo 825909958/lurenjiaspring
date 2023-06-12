@@ -1,0 +1,165 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   		http://www.springframework.org/schema/beans/spring-beans.xsd
+    	http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor">
+        <property name="defaultPersistenceUnitName" value="secsPU"/>
+	</bean>
+
+	<bean id="emFactoryBean" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="jpaVendorAdapter" ref="jpaVendorAdapter"/>
+        <property name="persistenceXmlLocation" value="classpath:/dao/jpa-persistence.xml"/>
+        <property name="persistenceUnitName" value="secsPU"/>
+        <property name="jpaPropertyMap">
+            <map>
+                <entry key="hibernate.dialect" value="${secs.hibernate.dialect:org.mardep.secs.dialects.SecsSQLServerDialect}" />
+                <entry key="hibernate.hbm2ddl.auto" value="${secs.hibernate.hbm2ddl.auto:none}"/>
+                <entry key="hibernate.hbm2ddl.import_files" value="${secs.hibernate.hbm2ddl.import_files:/server/init_data.sql}"/>
+                <entry key="hibernate.format_sql" value="${secs.hibernate.format_sql:true}" />
+                <entry key="hibernate.show_sql" value="${secs.hibernate.showSql:false}" />
+                <entry key="hibernate.connection.useUnicode" value="true" />
+                <entry key="hibernate.connection.charSet" value="UTF8" />
+                <entry key="org.hibernate.envers.do_not_audit_optimistic_locking_field" value="false" />
+                <entry key="hibernate.connection.release_mode" value="${secs.hibernate.connection.release_mode:on_close}" />
+<!--                 <entry key="hibernate.enable_lazy_load_no_trans" value="${secs.hibernate.enable_lazy_load_no_trans}" /> -->
+            </map>
+        </property>
+    </bean>
+
+	<bean id="jpaVendorAdapter" class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+	</bean>  
+
+	<bean id="txManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="emFactoryBean"/>
+    </bean>
+
+<!-- 
+	<aop:config>
+		<aop:pointcut id="codeTableEnquiryServiceMethods" expression="execution(* org.mardep.secs.service.ICodeTableEnquiryService..*(..))"/>
+		<aop:advisor pointcut-ref="codeTableEnquiryServiceMethods" advice-ref="read-only-advice" />
+	</aop:config>
+
+	<tx:advice id="read-only-advice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+ -->
+
+
+	<aop:config>
+		<aop:pointcut id="validatorFactoryMethods" expression="execution(* org.mardep.secs.validation.validator.operation.ValidatorFactory..*(..))"/>
+		<aop:advisor pointcut-ref="validatorFactoryMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="abstractServiceMethods" expression="execution(* org.mardep.secs.service.impl.AbstractService..*(..))"/>
+		<aop:advisor pointcut-ref="abstractServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="codeTableServiceMethods" expression="execution(* org.mardep.secs.service.ICodeTableService..*(..))"/>
+		<aop:advisor pointcut-ref="codeTableServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="companyServiceMethods" expression="execution(* org.mardep.secs.service.ICompanyService..*(..))"/>
+		<aop:advisor pointcut-ref="companyServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="seafarerServiceMethods" expression="execution(* org.mardep.secs.service.ISeafarerService..*(..))"/>
+		<aop:advisor pointcut-ref="seafarerServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="applicationServiceMethods" expression="execution(* org.mardep.secs.service.IApplicationService..*(..))"/>
+		<aop:advisor pointcut-ref="applicationServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="applicationEnquiryServiceMethods" expression="execution(* org.mardep.secs.service.IApplicationEnquiryService..*(..))"/>
+		<aop:advisor pointcut-ref="applicationEnquiryServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="demandNoteServiceMethods" expression="execution(* org.mardep.secs.service.IDemandNoteService..*(..))"/>
+		<aop:advisor pointcut-ref="demandNoteServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="userServiceMethods" expression="execution(* org.mardep.secs.service.IUserService..*(..))"/>
+		<aop:advisor pointcut-ref="userServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="userDelegateServiceMethods" expression="execution(* org.mardep.secs.service.IUserDelegateService..*(..))"/>
+		<aop:advisor pointcut-ref="userDelegateServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="licenseServiceMethods" expression="execution(* org.mardep.secs.service.ILicenseService..*(..))"/>
+		<aop:advisor pointcut-ref="licenseServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="reportServiceMethods" expression="execution(* org.mardep.secs.service.IReportService..*(..))"/>
+		<aop:advisor pointcut-ref="reportServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="sgtisServiceMethods" expression="execution(* org.mardep.secs.service.ISgtisService..*(..))"/>
+		<aop:advisor pointcut-ref="sgtisServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="ebsServiceMethods" expression="execution(* org.mardep.secs.service.IEbsService..*(..))"/>
+		<aop:advisor pointcut-ref="ebsServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="examServiceMethods" expression="execution(* org.mardep.secs.service.IExamService..*(..))"/>
+		<aop:advisor pointcut-ref="examServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="sgtisServiceMethods" expression="execution(* org.mardep.secs.service.ISgtisService..*(..))"/>
+		<aop:advisor pointcut-ref="sgtisServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="limitationServiceMethods" expression="execution(* org.mardep.secs.service.ILimitationService..*(..))"/>
+		<aop:advisor pointcut-ref="limitationServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="controlTableServiceMethods" expression="execution(* org.mardep.secs.service.dns.IControlTableService..*(..))"/>
+		<aop:advisor pointcut-ref="controlTableServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="soapMessageServiceMethods" expression="execution(* org.mardep.secs.service.dns.ISoapMessageService..*(..))"/>
+		<aop:advisor pointcut-ref="soapMessageServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="createLogMethods" expression="execution(* org.mardep.secs.service.restfullog.IRestfulLogService..*(..))"/>
+		<aop:advisor pointcut-ref="createLogMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="assAgencyResultServiceMethods" expression="execution(* org.mardep.secs.service.assagency.IAssAgencyExamResultsService..*(..))"/>
+		<aop:advisor pointcut-ref="assAgencyResultServiceMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="saveAssAgencyExamReports" expression="execution(* org.mardep.secs.service.assagency.IAssAgencyExamReportsService..*(..))"/>
+		<aop:advisor pointcut-ref="saveAssAgencyExamReports" advice-ref="tx-advice" />
+	</aop:config>
+	<aop:config>
+		<aop:pointcut id="assAgencyExamReportsServiceTempMethods" expression="execution(* org.mardep.secs.service.assagency.IAssAgencyExamResultsTempService..*(..))"/>
+		<aop:advisor pointcut-ref="assAgencyExamReportsServiceTempMethods" advice-ref="tx-advice" />
+	</aop:config>
+	<tx:advice id="tx-advice" transaction-manager="txManager">
+		<tx:attributes>
+			<tx:method name="find*" 			propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="generate*" 		propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="validate*" 		propagation="SUPPORTS" read-only="true"/>
+			<tx:method name="resit*" 			propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="create*" 			propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="delete*" 			propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="updateOrInsert*" 	propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="assign*" 			propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="approveCRA" 		propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+			<tx:method name="pollApplication"	propagation="NEVER"    read-only="true"/>
+			<tx:method name="*" 				propagation="REQUIRED" read-only="false" rollback-for="SecsServiceException"/>
+		</tx:attributes>
+	</tx:advice>
+
+</beans>
