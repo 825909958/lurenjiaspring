@@ -49,5 +49,16 @@ byte[] bytes1 = FileUtil.readBytes("test.pdf");
 
 9.spring Bean Scope设置cglib代理解决抽象接口在父类的问题，因为我们抽出来的方法是通过父类的接口调用，但是自己类没有接口所有用cglib解决（代理类的类型为实际类型）
 
-10.![31f390cb18dc6e7c29850fcd9bf4b17](D:\md\up.assets\31f390cb18dc6e7c29850fcd9bf4b17.png)
+10.![31f390cb18dc6e7c29850fcd9bf4b17](D:\project\lurenjiaspring\md\up.assets\31f390cb18dc6e7c29850fcd9bf4b17.png)
 
+11.配置参数优先级
+> 在 Java 应用程序中，JVM 参数可以通过多种方式进行配置，例如在操作系统命令行中指定、在应用程序启动脚本中设置、在 JBoss 服务器的配置文件中定义等。
+> 在使用 Spring 框架和 Maven 构建项目时，我们还可以在 Spring 的配置文件和 pom.xml 文件中指定一些 JVM 参数，例如内存大小、JVM 选项等。
+
+以下是 Java 应用程序中常见的 JVM 参数按照优先级排序：
+
+操作系统命令行中指定的参数，例如 -Xmx1024m 参数用来指定最大堆内存大小。
+应用程序启动脚本中设置的参数，例如在启动脚本中使用 JAVA_OPTS 环境变量设置的参数。
+JBoss 服务器的配置文件中定义的参数，例如在 standalone.xml 文件中设置的参数。
+Spring 的配置文件中指定的参数，例如使用 <jvm-args> 标签指定的参数。
+Maven 的 pom.xml 文件中指定的参数，例如使用 maven-compiler-plugin 插件指定的参数。

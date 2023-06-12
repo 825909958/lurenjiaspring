@@ -1,9 +1,5 @@
 # 1
 
-![image-20230511134914940](C:\Users\Hunter Tan\AppData\Roaming\Typora\typora-user-images\image-20230511134914940.png)
-
-![image-20230510174705357](C:\Users\Hunter Tan\AppData\Roaming\Typora\typora-user-images\image-20230510174705357.png)
-
 ```
 
 
