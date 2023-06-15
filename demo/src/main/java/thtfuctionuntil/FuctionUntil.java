@@ -1,4 +1,4 @@
-package ThtFuctionUntil;
+package thtfuctionuntil;
 
 import java.util.function.Function;
 

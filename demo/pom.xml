@@ -15,6 +15,11 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>it.unibo.tucson</groupId>
+            <artifactId>service</artifactId>
+            <version>0.2.9</version>
+        </dependency>
     </dependencies>
 
     <properties>
