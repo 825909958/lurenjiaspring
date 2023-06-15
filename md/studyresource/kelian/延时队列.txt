@@ -1,0 +1,74 @@
+public class DailyTask implements Delayed {
+    // 任务的执行时间
+    private long executeTime;
+    // 任务的执行逻辑
+    private Runnable task;
+
+    public DailyTask(Runnable task) {
+        this.task = task;
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.HOUR_OF_DAY, 8);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        this.executeTime = cal.getTimeInMillis();
+    }
+
+    // 获取任务剩余的延迟时间
+    @Override
+    public long getDelay(TimeUnit unit) {
+        return unit.convert(executeTime - System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+    }
+
+    // 比较任务的优先级
+    @Override
+    public int compareTo(Delayed o) {
+        return Long.compare(this.executeTime, ((DailyTask) o).executeTime);
+    }
+
+    // 执行任务
+    public void runTask(){
+        task.run();
+    }
+}
+
+public class DailyScheduler {
+    // 延迟队列
+    private DelayQueue<DailyTask> queue = new DelayQueue<>();
+
+    // 添加任务
+    public void addTask(Runnable task) {
+        DailyTask dailyTask = new DailyTask(task);
+        queue.offer(dailyTask);
+    }
+
+    // 删除任务
+    public boolean removeTask(Runnable task) {
+        for (DailyTask dailyTask : queue) {
+            if (dailyTask.task.equals(task)) {
+                return queue.remove(dailyTask);
+            }
+        }
+        return false;
+    }
+
+    // 执行任务
+    public void execute() {
+        while (!queue.isEmpty()) {
+            try {
+                DailyTask dailyTask = queue.take();
+                dailyTask.runTask();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+}
+
+DailyScheduler scheduler = new DailyScheduler();
+scheduler.addTask(Runnable) -> {
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    String currentTime = formatter.format(new Date());
+    System.out.println("任务开始执行，当前时间为：" + currentTime);
+};
+
+scheduler.execute();

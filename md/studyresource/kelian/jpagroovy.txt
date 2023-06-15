@@ -1,0 +1,858 @@
+import com.intellij.database.model.DasTable
+import com.intellij.database.model.ObjectKind
+import com.intellij.database.util.Case
+import com.intellij.database.util.DasUtil
+
+import java.io.*
+import java.text.SimpleDateFormat
+
+/*
+ * @勒是啥子  IDEA database 生成 java实体工具脚本
+ * @哪儿来的 插件本生有代码，不一样的都是网上抄的略有改动。不知出处网上到处都是。
+ * @囊个用 IDEA database 插件 新建mysql连接 ，在表的列表中种选你要生成的表，然后
+ * -> Scripted Extensions  -> Generate POJOs.groovy
+ * 这个脚本都是 Generate POJOs.groovy 里面的代码。
+ */
+
+packageName = ""
+typeMapping = [
+        (~/(?i)tinyint|smallint|mediumint|int/)  : "Integer",
+        /*(~/(?i)int/)                             : "Long",*/
+        (~/(?i)bool|bit/)                        : "Boolean",
+        (~/(?i)float|double|decimal|real/)       : "Double",
+        (~/(?i)datetime|timestamp|date|time/)    : "Date",
+        (~/(?i)blob|binary|bfile|clob|raw|image/): "InputStream",
+        (~/(?i)/)                                : "String"
+]
+
+
+FILES.chooseDirectoryAndSave("Choose directory", "Choose where to store generated files") { dir ->
+    SELECTION.filter { it instanceof DasTable && it.getKind() == ObjectKind.TABLE }.each { generateMain(it, dir) }
+}
+
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateMain(table, dir) {
+//    generateParam(table, dir)
+//    generateDTO(table, dir)
+    generateEntity(table, dir)
+    generateJPADao(table, dir)
+    generateJPAImplDao(table, dir)
+    generateDMI(table, dir)
+    generateService(table, dir)
+//    generateController(table, dir)
+
+}
+
+/************************************Param**************************************/
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateParam(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    className = className.substring(2,className.toString().length())
+    String dirstrq = dir.toString() + "/params/" + className + "Param.java";
+    File file = new File(dirstrq)
+    if (!file.getParentFile().exists()) {
+        file.getParentFile().mkdirs()
+        file.createNewFile()
+    }
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateParam(out, className, fields, table) }
+
+}
+
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateParam(out, className, fields, table) {
+    out.println "package $packageName" + ".params;"
+    out.println ""
+    out.println "import $packageName" + ".$className;"
+    out.println "import lombok.Data;"
+    out.println "import io.swagger.annotations.ApiModelProperty;"
+    out.println "import cn.com.xx.coupon.model.params.PageParam;"
+
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+    if (types.contains("Date")) {
+        out.println "import java.util.Date;"
+        out.println "import org.springframework.format.annotation.DateTimeFormat;"
+    }
+
+    if (types.contains("InputStream")) {
+        out.println "import java.io.InputStream;"
+    }
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+    out.println "/**\n" +
+            " * @Description  " + classtitleName + "的param \n" +
+            " * @author System Generation  \n" +
+            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+            " */"
+    //类注解
+    out.println ""
+    out.println "@Data"
+    //类
+    out.println "public class $className" + "Param  extends PageParam {"
+    out.println ""
+    //序列化
+    //out.println genSerialID()
+    //成员变量
+    fields.each() {
+        out.println ""
+        // 输出 注释
+        if (isNotEmpty(it.commoent)) {
+            out.println "\t@ApiModelProperty(value = \"${it.commoent.toString()}\")"
+        }
+        if (it.type?.toString().equals("Date")) {
+            out.println "\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")"
+        }
+        // 输出 成员变量
+        out.println "\tprivate ${it.type} ${it.name};"
+    }
+    out.println ""
+    out.println "}"
+}
+
+
+/************************************dto**************************************/
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateDTO(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    //className = className.substring(2,className.toString().length())
+    String dirstrq = dir.toString() + "/dto/" + className + "DTO.java";
+    File file = new File(dirstrq)
+    if (!file.getParentFile().exists()) {
+        file.getParentFile().mkdirs()
+        file.createNewFile()
+    }
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateDTO(out, className, fields, table) }
+
+}
+
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateDTO(out, className, fields, table) {
+    out.println "package $packageName" + ".dto;"
+    out.println ""
+    out.println "import $packageName" + ".$className;"
+    out.println "import lombok.Data;"
+    out.println "import io.swagger.annotations.ApiModelProperty;"
+
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+    if (types.contains("Date")) {
+        out.println "import java.util.Date;"
+        out.println "import org.springframework.format.annotation.DateTimeFormat;"
+    }
+
+    if (types.contains("InputStream")) {
+        out.println "import java.io.InputStream;"
+    }
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+    out.println "/**\n" +
+            " * @Description  " + classtitleName + "的DTO \n" +
+            " * @author System Generation  \n" +
+            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+            " */"
+    //类注解
+    out.println ""
+    out.println "@Data"
+    //类
+    out.println "public class $className" + "DTO  extends $className {"
+    out.println ""
+    //序列化
+    //out.println genSerialID()
+    //成员变量
+    fields.each() {
+        out.println ""
+        // 输出 注释
+        if (isNotEmpty(it.commoent)) {
+            out.println "\t@ApiModelProperty(value = \"${it.commoent.toString()}\")"
+        }
+        if (it.type?.toString().equals("Date")) {
+            out.println "\t@DateTimeFormat(pattern = \"yyyy-MM-dd HH:mm:ss\")"
+        }
+        // 输出 成员变量
+        out.println "\tprivate ${it.type} ${it.name};"
+    }
+    out.println ""
+    out.println "}"
+}
+
+
+
+/************************************Entity**************************************/
+
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateEntity(table, dir) {
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, className + ".java")), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateEntity(out, className, fields, table) }
+
+//    new File(dir, className + ".java").withPrintWriter { out -> generateEntity(out, className, fields,table) }
+}
+
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateEntity(out, className, fields, table) {
+    out.println "package $packageName"+ ";"
+    out.println ""
+    out.println "import javax.persistence.*;"
+    out.println "import lombok.Getter;"
+    out.println "import lombok.Setter;"
+    /* out.println "import javax.persistence.Entity;"
+     out.println "import javax.persistence.Table;"
+    out.println "import java.io.Serializable;"
+    out.println "import lombok.Data;"*/
+
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+    if (types.contains("Date")) {
+        out.println "import java.util.Date;"
+    }
+
+    if (types.contains("InputStream")) {
+        out.println "import java.io.InputStream;"
+    }
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+    out.println "/**\n" +
+            " * @Title " + classtitleName + "\n" +
+            " * @Description  \n" +
+            " * @author Hunter Tan  \n" +
+            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+            " */"
+    //类注解
+    out.println ""
+    out.println "@Entity"
+    out.println "@Table ( name =\"" + table.getName() + "\" )"
+//    out.println "@Data"
+    out.println "@Setter"
+    out.println "@Getter"
+    //类
+    out.println "public class $className  extends AbstractPersistentEntity_fsqcdb_auditable<Long> {"
+    out.println ""
+    out.println "\t@Id\n" +
+            "\t@GeneratedValue(strategy = GenerationType.SEQUENCE)\n" +
+            "\t@Column(name = \"id\", nullable = false)\n" +
+            "\tprivate Long id;"
+    //序列化
+//    out.println genSerialID()
+    //成员变量
+    fields.each() {
+        out.println ""
+        // 输出 注释
+        if (isNotEmpty(it.commoent)) {
+            out.println "\t/**"
+            out.println "\t * ${it.commoent.toString()}"
+            out.println "\t */"
+        }
+
+        // 输出 注解
+        if (it.annos != "") {
+            //out.println "   ${it.annos.replace("[@Id]", "")}"
+            out.println "   ${it.annos}"
+//            if (it.type?.toString().equals("Date")) {
+//                out.println "\t@Temporal(TemporalType.TIMESTAMP)"
+//            }
+        }
+
+
+        // 输出 成员变量
+        out.println "\tprivate ${it.type} ${it.name};"
+    }
+    out.println ""
+    out.println "\t@Override"
+    out.println "\tpublic Long getId() {"
+    out.println "\t   return null;"
+    out.println "\t}"
+    out.println ""
+    out.println "}"
+}
+
+
+
+
+
+/************************************jpadao**************************************/
+
+
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateJPADao(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, "I"+className +
+            "Dao.java")), "UTF-8"))
+    //className = className.substring(2,className.toString().length())
+//    String dirstrq = dir.toString() + "I"+className + "Dao.java";
+//    File file = new File(dirstrq)
+//    file.createNewFile()
+//    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateJPADao(out, className, fields, table) }
+
+}
+
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateJPADao(out, className, fields, table) {
+    out.println "package $packageName;"
+    out.println ""
+    out.println "import $packageName" + ".$className;"
+//    out.println "import org.mardep.fsqc.dao.IBaseDao;"
+//    out.println "import org.springframework.data.jpa.repository.JpaRepository;"
+//    out.println "import org.springframework.data.jpa.repository.JpaSpecificationExecutor;"
+//    out.println "import org.springframework.stereotype.Repository;"
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+//    out.println "/**\n" +
+//            " * @Description  " + classtitleName + "的Dao \n" +
+//            " * @author System Generation  \n" +
+//            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+//            " */"
+    //类注解
+    out.println ""
+//    out.println "@Repository"
+    //类
+    out.println "public interface I$className" + "Dao  extends IBaseDao<$className, Long>  {"
+    out.println ""
+
+    out.println ""
+    out.println "}"
+}
+//////tttttt
+def generateJPAImplDao(table, dir) {
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, className +
+            "JpaDao.java")), "UTF-8"))
+
+    //className = className.substring(2,className.toString().length())
+//    String dirstrq =className + "JpaDao.java";
+//    File file = new File(dirstrq)
+//    file.createNewFile()
+//    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateJPAImplDao(out, className, fields, table) }
+
+}
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateJPAImplDao(out, className, fields, table) {
+    out.println "package $packageName;"
+    out.println ""
+    out.println "import $packageName" + ".$className;"
+//    out.println "import org.mardep.fsqc.dao.IBaseDao;"
+//    out.println "import org.springframework.data.jpa.repository.JpaRepository;"
+//    out.println "import org.springframework.data.jpa.repository.JpaSpecificationExecutor;"
+//    out.println "import org.springframework.stereotype.Repository;"
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+//    out.println "/**\n" +
+//            " * @Description  " + classtitleName + "的Dao \n" +
+//            " * @author System Generation  \n" +
+//            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+//            " */"
+    //类注解
+    out.println ""
+    out.println "@Repository"
+    //类
+    out.println "public class $className" + "JpaDao  extends AbstractJpaDao_fsqcdb<$className, Long>  {"
+    out.println ""
+
+    out.println ""
+    out.println "}"
+}
+
+def generateDMI(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, className +
+            "DMI.java")), "UTF-8"))
+    //className = className.substring(2,className.toString().length())
+//    String dirstrq = dir.toString() + "I"+className + "Dao.java";
+//    File file = new File(dirstrq)
+//    file.createNewFile()
+//    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateDMI(out, className, fields, table) }
+
+}
+
+def generateDMI(out, className, fields, table) {
+    out.println "package $packageName;"
+    out.println ""
+    out.println "import $packageName" + ".$className;"
+
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+    //类注释
+    out.println ""
+
+    //类注解
+    out.println ""
+    out.println "@Component"
+    //类
+    out.println "public class $className" + "DMI extends AbstractDMI<$className>  {"
+    out.println ""
+    def service1 = className.length() == 1 ? className : Case.LOWER.apply(className[0]) + className[1..-1]
+    out.println "\t@Autowired\n" +
+            "\tprivate I$className"+"Service $service1"+"Service;"
+    out.println "    @Override\n" +
+            "    protected IBaseService getBaseService() {\n" +
+            "        return $service1"+"Service;\n" +
+            "    }\n" +
+            "\n" +
+            "    @Override\n" +
+            "    public DSResponse update(ActUpRecord entity, DSRequest dsRequest) {\n" +
+            "        return super.update(entity, dsRequest);\n" +
+            "    }\n" +
+            "\n" +
+            "    @Override\n" +
+            "    public DSResponse add(ActUpRecord entity, DSRequest dsRequest) {\n" +
+            "        return super.add(entity, dsRequest);\n" +
+            "    }\n" +
+            "\n" +
+            "    @Override\n" +
+            "    public DSResponse fetch(ActUpRecord entity, DSRequest dsRequest) {\n" +
+            "        return super.fetch(entity, dsRequest);\n" +
+            "    }"
+
+    out.println ""
+    out.println "}"
+}
+
+
+/************************************service**************************************/
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateService(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    
+//    className = className.substring(2,className.toString().length())
+//    String dirstrq = dir.toString() + "/service/" + className + "Service.java";
+//    File file = new File(dirstrq)
+//    if (!file.getParentFile().exists()) {
+//        file.getParentFile().mkdirs()
+//        file.createNewFile()
+//    }
+//    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, "I"+className +
+            "Service.java")), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateService(out, className, fields, table) }
+
+
+//    dirstrq = dir.toString() + "/service/impl/" + className + "ServiceImpl.java";
+//    file = new File(dirstrq)
+//    if (!file.getParentFile().exists()) {
+//        file.getParentFile().mkdirs()
+//        file.createNewFile()
+//    }
+     printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(new File(dir, className +
+            "Service.java")), "UTF-8"))
+//    printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateServiceImpl(out, className, fields, table) }
+
+}
+
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateService(out, className, fields, table) {
+    out.println "package $packageName" + ".service;"
+    out.println ""
+    out.println ""
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+//    //类注释
+//    out.println ""
+//    out.println "/**\n" +
+//            " * @Description  " + classtitleName + "的service \n" +
+//            " * @author System Generation  \n" +
+//            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+//            " */"
+    //类注解
+    out.println ""
+    //类
+    out.println "public interface I$className" + "Service extends IBaseService{"
+    
+    out.println ""
+    out.println "}"
+}
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateServiceImpl(out, className, fields, table) {
+    out.println "package $packageName" + ".service;"
+    out.println ""
+    out.println "import $packageName" + ".service.$className"+"Service;"
+    out.println "import org.springframework.stereotype.Service;"
+    out.println "import org.springframework.beans.factory.annotation.Autowired;"
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+    
+    String classtitleName = table.getName();
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+    
+    //类注解
+    out.println ""
+    out.println "@Service(\"$className\")"
+    //类
+    out.println "public class $className" + "Service extends AbstractService implements I$className"+"Service{"
+
+    out.println "\t@Autowired"
+    def dao1 = className.length() == 1 ? className : Case.LOWER.apply(className[0]) + className[1..-1]
+    out.println "\tprivate I$className"+"Dao $dao1"+"Dao;"
+    out.println ""
+    out.println ""
+    
+
+
+    out.println ""
+    out.println "}"
+}
+
+/************************************Controller**************************************/
+/**
+ * 生成代码
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateController(table, dir) {
+
+    def className = javaName(table.getName(), true)
+    def fields = calcFields(table)
+    packageName = getPackageName(dir)
+    className = className.substring(2,className.toString().length())
+    String dirstrq = dir.toString() + "/controller/" + className + "Controller.java";
+    File file = new File(dirstrq)
+    if (!file.getParentFile().exists()) {
+        file.getParentFile().mkdirs()
+        file.createNewFile()
+    }
+    PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF-8"))
+    printWriter.withPrintWriter { out -> generateController(out, className, fields, table) }
+
+
+}
+
+/**
+ * 生成代码 模版
+ * @param table
+ * @param dir
+ * @return
+ */
+def generateController(out, className, fields, table) {
+    out.println "package $packageName" + ".controller;"
+    out.println ""
+    out.println "import cn.com.xx.coupon.util.PageInfo;"
+    out.println "import $packageName" + ".service.$className" + "Service;"
+    out.println "import $packageName" + ".dto.Tb$className" + "DTO;"
+    out.println "import $packageName" + ".params.$className" + "Param;"
+    out.println "import lombok.extern.slf4j.Slf4j;"
+    out.println "import org.springframework.beans.factory.annotation.Autowired;"
+    out.println "import org.springframework.web.bind.annotation.*;"
+    out.println "import io.swagger.annotations.Api;"
+    out.println "import io.swagger.annotations.ApiOperation;"
+    out.println "import cn.com.xx.core.web.ServiceResult;"
+    out.println "import cn.com.xx.core.common.tool.BaseController;"
+    Set types = new HashSet()
+
+    fields.each() {
+        types.add(it.type)
+    }
+
+
+    String classtitleName = table.getName();
+    String classtitleName1 = table.getComment();
+    String tableName1 = table.getName()
+    if (null != table.getComment() && "" != table.getComment()) {
+        classtitleName = table.getComment() + "(" + table.getName() + ")";
+    }
+
+
+    //类注释
+    out.println ""
+    out.println "/**\n" +
+            " * @Description  " + classtitleName + "的Controller \n" +
+            " * @author System Generation  \n" +
+            " * @Date " + new SimpleDateFormat("yyyy-MM-dd").format(new Date()) + " \n" +
+            " */"
+    //类注解
+
+
+    out.println ""
+    out.println "@Slf4j"
+    out.println "@RestController"
+    out.println "@RequestMapping(value = \"/admin/coupon/"+tableName1+ "\")"
+    out.println "@Api(tags = \""+classtitleName1+ "\")"
+    //类
+    out.println "public class $className" + "Controller extends BaseController{"
+
+    out.println "@Autowired"
+    def dao1 = className.length() == 1 ? className : Case.LOWER.apply(className[0]) + className[1..-1]
+    out.println " $className" + "Service $dao1" + "Service;"
+    out.println ""
+    out.println ""
+
+
+    out.println "/**"
+    out.println " * 分页查询列表"
+    out.println " * @param param"
+    out.println " * @return"
+    out.println " */"
+    out.println " @ApiOperation(value = \"分页查询列表\", notes = \"分页查询列表\")"
+    out.println " @PostMapping(value = \"/queryAll\")"
+    out.println "ServiceResult queryAll(@RequestBody $className" + "Param param){"
+    out.println " return toServiceResultSuccess($dao1" + "Service.queryAll(param));"
+    out.println "}"
+
+    out.println "/**"
+    out.println " * 查询详情"
+    out.println " * @param id"
+    out.println " * @return"
+    out.println " */"
+    out.println " @ApiOperation(value = \"分页查询列表\", notes = \"分页查询列表\")"
+    out.println " @PostMapping(value = \"/queryAll\")"
+    out.println "ServiceResult detail(@PathVariable String id){"
+    out.println "return toServiceResultSuccess($dao1" + "Service.detail(id));"
+    out.println "}"
+
+    out.println "/**"
+    out.println " * 分页查询列表"
+    out.println " * @param dto"
+    out.println " * @return"
+    out.println " */"
+    out.println " @ApiOperation(value = \"分页查询列表\", notes = \"分页查询列表\")"
+    out.println " @PostMapping(value = \"/queryAll\")"
+    out.println "ServiceResult add(@RequestBody Tb$className" + "DTO dto){"
+    out.println "return toServiceResultSuccess($dao1" + "Service.add(dto));"
+    out.println "}"
+
+
+    out.println ""
+    out.println "}"
+}
+/************************************公共**************************************/
+/*
+/**
+ * 数据
+ * @param table
+ * @return
+ */
+def calcFields(table) {
+    DasUtil.getColumns(table).reduce([]) { fields, col ->
+        def spec = Case.LOWER.apply(col.getDataType().getSpecification())
+        def typeStr = typeMapping.find { p, t -> p.matcher(spec).find() }.value
+
+        def annos = "\t@Column(name = \"" + col.getName() + "\" )";
+        def comment =""
+        if (null != col.getComment() && "" != col.getComment()) {
+            comment = getitCommoent(col.getComment())
+            annos = "\t@Column(name = \"" + col.getName() + "\" , columnDefinition = \"" + comment + "\'\")";
+        }
+        // 这儿网上没找 咋个设置 @ID 你们要去看看源码 ideaIU-XXX.win\plugins\DatabaseTools\lib
+        if ("id".equals(Case.LOWER.apply(col.getName()))) {
+            annos = "\t@Id \r" + annos
+        }
+        def comm = [
+                colName : col.getName(),
+                name    : javaName(col.getName(), false),
+                type    : typeStr,
+                commoent: comment,
+                annos   : annos]
+        fields += [comm]
+    }
+}
+/**
+ * 生成类名
+ *
+ * @param str
+ * @param capitalize
+ * @return
+ */
+def javaName(str, capitalize) {
+    def s = com.intellij.psi.codeStyle.NameUtil.splitNameIntoWords(str)
+            .collect { Case.LOWER.apply(it).capitalize() }
+            .join("")
+            .replaceAll(/[^\p{javaJavaIdentifierPart}[_]]/, "_")
+    capitalize || s.length() == 1 ? s : Case.LOWER.apply(s[0]) + s[1..-1]
+}
+def isNotEmpty(content) {
+    return content != null && content.toString().trim().length() > 0
+}
+/**
+ *  生成序列化ID
+ * @return
+ */
+static String genSerialID() {
+    return "\tprivate static final long serialVersionUID =  " + Math.abs(new Random().nextLong()) + "L;"
+}
+/**
+ * 获取包所在文件夹路径
+ * @param dir
+ * @return
+ */
+def getPackageName(dir) {
+    return dir.toString().replaceAll("\\\\", ".").replaceAll("/", ".").replaceAll("^.*src(\\.main\\.java\\.)?", "") + ""
+}
+def getitCommoent(commoent) {
+    return  commoent.replaceAll("\n", "").replaceAll("\r", "")
+}

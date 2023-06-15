@@ -1,10 +1,13 @@
 package com.example.lurenjiaspring.config.rabbitconfig;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
+@ConditionalOnProperty(value = "spring.rabbitmq.enabled", havingValue = "true", matchIfMissing = true)
 public class SimpleMqConfig {
     // one simple
     public static final String SIMPLE_QUEUE = "springboot-simple-queue";
@@ -14,6 +17,15 @@ public class SimpleMqConfig {
     //public static final String QUEUE_NAME2 = "springboot-fanout-queue2";
     public static final String EXCHANGE_NAME1 = "springboot-fanout-exchange";
 
+    @Bean
+    public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory();
+        connectionFactory.setHost("localhost");
+        connectionFactory.setPort(5672);
+        connectionFactory.setUsername("guest");
+        connectionFactory.setPassword("guest");
+        return connectionFactory;
+    }
     /**
      * one
      * @return

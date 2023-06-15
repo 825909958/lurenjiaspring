@@ -1,0 +1,3 @@
+netstat -ano | find "5080"
+
+tskill 5796
