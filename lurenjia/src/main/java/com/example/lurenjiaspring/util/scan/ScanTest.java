@@ -15,7 +15,7 @@ public class ScanTest {
         //System.out.println("beanDefinitionNames = " + arrayList);
 
         //annotationConfigApplicationContext.scan("org.slf4j.impl");
-        annotationConfigApplicationContext.register(config.class);
+        annotationConfigApplicationContext.register(Config.class);
         annotationConfigApplicationContext.refresh();
         List<String> beanDefinitionNames = Arrays.stream(annotationConfigApplicationContext.getBeanDefinitionNames()).collect(Collectors.toList());
         System.out.println("beanDefinitionNames = " + beanDefinitionNames);

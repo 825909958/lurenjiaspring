@@ -1,5 +1,7 @@
 package com.example.lurenjiaspring.controller.countpeople;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,7 @@ import java.net.URLEncoder;
 public class IndexController
         //implements ApplicationContextAware
 {
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(IndexController.class);
+    Logger logger = LoggerFactory.getLogger(IndexController.class);
 
 
     //@Override

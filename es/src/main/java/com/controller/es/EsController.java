@@ -5,6 +5,8 @@ import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
 import com.entity.AppUser;
 import com.service.AppUserDao;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +20,7 @@ import java.util.*;
  */
 @RestController
 public class EsController {
-    private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(EsController.class);
+    Logger logger = LoggerFactory.getLogger(EsController.class);
     @Resource
     private ElasticsearchClient template;
 

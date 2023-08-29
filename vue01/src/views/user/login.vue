@@ -1,7 +1,7 @@
 <template>
   <div class="about" @click="_login">
     <!--    <HelloWorld msg="Welcome to Your Vue.js App"/>-->
-    aaaa
+    login
   </div>
 
   <div class="about" @click="count">

@@ -26,6 +26,12 @@
             <groupId>it.unibo.tucson</groupId>
             <artifactId>service</artifactId>
             <version>0.2.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-simple</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 

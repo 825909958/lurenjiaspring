@@ -25,43 +25,43 @@
         <mybatis.stater.version>2.1.3</mybatis.stater.version>
     </properties>
 
-    <profiles>
-        <profile>
-            <id>DEV</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <jetty-env>jetty-local-tht.xml</jetty-env>
-                <jetty-port>8080</jetty-port>
-                <secs-env>DEV</secs-env>
-                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>SIT</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <jetty-env>jetty-sit.xml</jetty-env>
-                <jetty-port>8080</jetty-port>
-                <secs-env>SIT</secs-env>
-                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>
-            </properties>
-        </profile>
-        <profile>
-            <id>SIT-20151007</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-            <properties>
-                <jetty-env>jetty-sit-20151007.xml</jetty-env>
-                <jetty-port>8080</jetty-port>
-                <secs-env>SIT</secs-env>
-            </properties>
-        </profile>
-    </profiles>
+<!--    <profiles>-->
+<!--        <profile>-->
+<!--            <id>DEV</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>true</activeByDefault>-->
+<!--            </activation>-->
+<!--            <properties>-->
+<!--                <jetty-env>jetty-local-tht.xml</jetty-env>-->
+<!--                <jetty-port>8080</jetty-port>-->
+<!--                <secs-env>DEV</secs-env>-->
+<!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--        <profile>-->
+<!--            <id>SIT</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>false</activeByDefault>-->
+<!--            </activation>-->
+<!--            <properties>-->
+<!--                <jetty-env>jetty-sit.xml</jetty-env>-->
+<!--                <jetty-port>8080</jetty-port>-->
+<!--                <secs-env>SIT</secs-env>-->
+<!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--        <profile>-->
+<!--            <id>SIT-20151007</id>-->
+<!--            <activation>-->
+<!--                <activeByDefault>false</activeByDefault>-->
+<!--            </activation>-->
+<!--            <properties>-->
+<!--                <jetty-env>jetty-sit-20151007.xml</jetty-env>-->
+<!--                <jetty-port>8080</jetty-port>-->
+<!--                <secs-env>SIT</secs-env>-->
+<!--            </properties>-->
+<!--        </profile>-->
+<!--    </profiles>-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -103,11 +103,7 @@
             <artifactId>spring-boot-starter-amqp</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
+
         <!--es-->
 <!--        <dependency>-->
 <!--            <groupId>org.springframework.boot</groupId>-->
@@ -187,6 +183,12 @@
             <groupId>it.unibo.tucson</groupId>
             <artifactId>service</artifactId>
             <version>0.2.9</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>slf4j-simple</artifactId>
+                    <groupId>org.slf4j</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

@@ -16,6 +16,7 @@ public class FilterDemo implements Filter {
             ServletException {
 //        System.out.println(chain + "11111");
         chain.doFilter(request, response);
+        System.out.println("Response filtered by MyFilter");
     }
 
     @Override

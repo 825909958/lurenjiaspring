@@ -35,7 +35,9 @@ public class UserContoller {
             LoginBody loginBody, HttpServletRequest request,
             HttpServletResponse response) throws IOException, ServletException {
         AjaxResult ajax = AjaxResult.success();
-
+        //if (true) {
+        //    throw new DemoModeException();
+        //}
         request.getRequestURI();
         String token = login(loginBody.getUsername(), loginBody.getPassword(), request, response);
         ajax.put(Constants.TOKEN, token);
