@@ -1,7 +1,6 @@
 package design.entity.goods.Rule;
 
 import design.constants.Constants;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -11,10 +10,13 @@ import java.math.RoundingMode;
  * @author THT
  */
 @Data
-@AllArgsConstructor
 public class DisCountRule extends Rule {
     private BigDecimal inputPrice;
     private Integer disCount;
+
+    public DisCountRule(Integer disCount) {
+        this.disCount = disCount;
+    }
 
     @Override
     public BigDecimal discountRule() {
@@ -27,6 +29,7 @@ public class DisCountRule extends Rule {
 
     @Override
     public BigDecimal finalAllRulesPrice(BigDecimal inputPrice) {
+        this.inputPrice = inputPrice;
         int i = inputPrice.compareTo(BigDecimal.ZERO);
         if (i <= 0) {
             return BigDecimal.ZERO;

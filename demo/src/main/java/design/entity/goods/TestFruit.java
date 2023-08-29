@@ -18,31 +18,31 @@ public class TestFruit {
     /**
      * 折扣
      */
-    private static final int DISCOUNT=8;
+    private static final int DISCOUNT = 8;
     /**
      * 单个商品数量
      */
-    private static final int QUANTITY_TEN=10;
+    private static final int QUANTITY_TEN = 10;
     /**
      * 苹果单价
      */
-    private static final int APPLE_PRICE=8;
+    private static final int APPLE_PRICE = 8;
     /**
      * 芒果单价
      */
-    private static final int MANGO_PRICE=20;
+    private static final int MANGO_PRICE = 20;
     /**
      * 草莓单价
      */
-    private static final int STRAWBERRY_PRICE=13;
+    private static final int STRAWBERRY_PRICE = 13;
     /**
      * 到达金额
      */
-    private static final BigDecimal REACH_AMOUNT =BigDecimal.valueOf(100);
+    private static final BigDecimal REACH_AMOUNT = BigDecimal.valueOf(100);
     /**
      * 扣减金额
      */
-    private static final BigDecimal DISCOUNT_AMOUNT =BigDecimal.valueOf(10);
+    private static final BigDecimal DISCOUNT_AMOUNT = BigDecimal.valueOf(10);
 
 
     /**
@@ -54,6 +54,7 @@ public class TestFruit {
         fruits.add(initStrawberryData());
         FruitFactory.setFruits(fruits);
         BigDecimal totalPrice = FruitFactory.totalPrice();
+
         logger.info("总价：{}", totalPrice);
     }
 
@@ -67,6 +68,7 @@ public class TestFruit {
         fruits.add(initMongoData());
         FruitFactory.setFruits(fruits);
         BigDecimal totalPrice = FruitFactory.totalPrice();
+
         logger.info("totalPrice: {}", totalPrice);
     }
 
@@ -75,13 +77,15 @@ public class TestFruit {
      */
     @Test
     public void test3() {
+        //初始化单个各种水果以及它本身的规则
         Strawberry strawberry = initStrawberryData();
-        strawberry.getPromotionalPriceAndInitRule(new DisCountRule(strawberry.getSingleFruitSum(), DISCOUNT));
+        strawberry.getPromotionalPriceAndInitRule(new DisCountRule(DISCOUNT));
         Mango mango = initMongoData();
         List<Fruit> fruits = initAppleData();
         fruits.add(mango);
         fruits.add(strawberry);
         FruitFactory.setFruits(fruits);
+
         logger.info("totalPrice:{}", FruitFactory.totalPrice());
     }
 
@@ -97,9 +101,8 @@ public class TestFruit {
         fruits.add(strawberry);
 
         FruitFactory.setFruits(fruits);
-
-        BigDecimal totalPromotionalPrice = FruitFactory.totalPromotionalPrice(new FullDisCountRule(FruitFactory.totalPrice(), REACH_AMOUNT,
-                DISCOUNT_AMOUNT));
+        // 初始化全部商品统计规则
+        BigDecimal totalPromotionalPrice = FruitFactory.totalPromotionalPrice(new FullDisCountRule(REACH_AMOUNT, DISCOUNT_AMOUNT));
         logger.info("TotalPrice() = {}", FruitFactory.totalPrice());
         logger.info("TotalPromotionalPrice {}", totalPromotionalPrice);
     }

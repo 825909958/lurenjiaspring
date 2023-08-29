@@ -1,16 +1,19 @@
 package design.entity.goods.Rule;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
-@AllArgsConstructor
 public class FullDisCountRule extends Rule {
     private BigDecimal inputPrice;
     private BigDecimal reachAmount;
     private BigDecimal discountAmount;
+
+    public FullDisCountRule(BigDecimal reachAmount, BigDecimal discountAmount) {
+        this.reachAmount = reachAmount;
+        this.discountAmount = discountAmount;
+    }
 
     @Override
     public BigDecimal fullDiscountRule() {
@@ -23,6 +26,7 @@ public class FullDisCountRule extends Rule {
 
     @Override
     public BigDecimal finalAllRulesPrice(BigDecimal inputPrice) {
+        this.inputPrice = inputPrice;
         int i = inputPrice.compareTo(BigDecimal.ZERO);
         if (i <= 0) {
             return BigDecimal.ZERO;
