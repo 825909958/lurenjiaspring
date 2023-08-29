@@ -15,17 +15,38 @@ import java.util.stream.Stream;
 
 public class TestFruit {
     private static final Logger logger = LoggerFactory.getLogger(TestFruit.class);
+    /**
+     * 折扣
+     */
     private static final int DISCOUNT=8;
+    /**
+     * 单个商品数量
+     */
     private static final int QUANTITY_TEN=10;
+    /**
+     * 苹果单价
+     */
     private static final int APPLE_PRICE=8;
+    /**
+     * 芒果单价
+     */
     private static final int MANGO_PRICE=20;
+    /**
+     * 草莓单价
+     */
     private static final int STRAWBERRY_PRICE=13;
+    /**
+     * 到达金额
+     */
     private static final BigDecimal REACH_AMOUNT =BigDecimal.valueOf(100);
+    /**
+     * 扣减金额
+     */
     private static final BigDecimal DISCOUNT_AMOUNT =BigDecimal.valueOf(10);
 
 
     /**
-     * 计算若干斤苹果和草莓一共花了多少钱
+     * 计算若干斤苹果和草莓一共花了多少钱 8*10+13*10=210
      */
     @Test
     public void test1() {
@@ -37,7 +58,7 @@ public class TestFruit {
     }
 
     /**
-     * 计算若干斤苹果和草莓和芒果一共花了多少钱
+     * 计算若干斤苹果和草莓和芒果一共花了多少钱 //8*10+13*10+20*10=410
      */
     @Test
     public void test2() {
@@ -50,7 +71,7 @@ public class TestFruit {
     }
 
     /**
-     * 计算若干斤苹果和草莓和芒果一共花了多少钱,其中草莓打8折
+     * 计算若干斤苹果和草莓和芒果一共花了多少钱,其中草莓打8折 13*0.8*10+20*10+8*10=384
      */
     @Test
     public void test3() {
@@ -65,7 +86,7 @@ public class TestFruit {
     }
 
     /**
-     * 计算若干斤苹果和草莓和芒果一共满了100-10的最终价
+     * 计算若干斤苹果和草莓和芒果一共满了100-10的最终价 410-10=400
      */
     @Test
     public void test4() {
