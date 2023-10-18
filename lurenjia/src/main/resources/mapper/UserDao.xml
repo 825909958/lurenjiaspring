@@ -18,8 +18,8 @@
 
     <insert id="createUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO `sys_user`
-            (`user_name`, `nick_name`,password)
-        VALUES (#{userName}, #{nickName},#{password});
+            (`user_name`, `nick_name`, password, create_time)
+        VALUES (#{userName}, #{nickName}, #{password}, now());
     </insert>
 
     	<update id="updateUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">

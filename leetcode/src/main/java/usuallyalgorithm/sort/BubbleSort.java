@@ -1,8 +1,9 @@
-package traverse.sort;
+package usuallyalgorithm.sort;
 
 public class BubbleSort implements Sort {
     /**
      * 左右比较，只要比他大就换位置，o(n2)
+     *
      * @param values
      * @return
      */
@@ -15,10 +16,8 @@ public class BubbleSort implements Sort {
                     values[j] = values[j + 1];
                     values[j + 1] = temp;
                 }
-
             }
         }
         return values;
     }
-
 }

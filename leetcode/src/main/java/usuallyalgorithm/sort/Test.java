@@ -1,4 +1,4 @@
-package traverse.sort;
+package usuallyalgorithm.sort;
 
 import java.util.Arrays;
 

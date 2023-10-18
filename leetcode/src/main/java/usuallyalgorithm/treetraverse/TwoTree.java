@@ -1,4 +1,4 @@
-package traverse.treetraverse;
+package usuallyalgorithm.treetraverse;
 
 public class TwoTree {
     public static void postOrderTraveral(TreeEntity node){

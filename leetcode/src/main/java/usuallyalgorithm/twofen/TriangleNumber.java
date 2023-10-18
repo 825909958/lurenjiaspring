@@ -1,8 +1,13 @@
-package traverse.twofen;
+package usuallyalgorithm.twofen;
 
 import java.util.Arrays;
 
 public class TriangleNumber {
+    /**
+     * 可以形成的三角形数目
+     * @param nums
+     * @return
+     */
     public static int triangleNumber(int[] nums) {
         int n = nums.length;
         Arrays.sort(nums);

@@ -104,6 +104,17 @@ public class GlobalExceptionHandler
     }
 
     /**
+     * 自定义验证异常
+     */
+    @ExceptionHandler(NumberFormatException.class)
+    public Object validExceptionHandler(NumberFormatException e)
+    {
+        log.error(e.getMessage(), e);
+        String message = e.getMessage();
+        return AjaxResult.error(message);
+    }
+
+    /**
      * 演示模式异常
      */
     @ExceptionHandler(DemoModeException.class)

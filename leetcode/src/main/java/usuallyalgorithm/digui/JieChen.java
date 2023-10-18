@@ -1,4 +1,4 @@
-package traverse.digui;
+package usuallyalgorithm.digui;
 
 public class JieChen {
     static String a = "name";

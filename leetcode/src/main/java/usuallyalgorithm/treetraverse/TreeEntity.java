@@ -1,4 +1,4 @@
-package traverse.treetraverse;
+package usuallyalgorithm.treetraverse;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

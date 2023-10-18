@@ -1,4 +1,4 @@
-package traverse.sort;
+package usuallyalgorithm.sort;
 
 
 public class HillSort implements Sort {

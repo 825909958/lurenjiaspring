@@ -10,7 +10,7 @@ public class Demo {
     //    a.invoke(t, "111");
     //}
 
-    public void ab(Object... t) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static void ab(Object... t) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         for (Object o : t) {
             Class<?> aClass = o.getClass();
 
@@ -21,9 +21,8 @@ public class Demo {
     }
 
     public static void main(String[] args) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        Demo demo = new Demo();
         TestDemo testDemo = new TestDemo();
-        demo.ab(testDemo);
+        Demo.ab(testDemo);
     }
 
     static class TestDemo {

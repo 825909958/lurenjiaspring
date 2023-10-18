@@ -1,4 +1,4 @@
-package traverse;
+package usuallyalgorithm;
 
 import java.util.ArrayList;
 import java.util.Arrays;

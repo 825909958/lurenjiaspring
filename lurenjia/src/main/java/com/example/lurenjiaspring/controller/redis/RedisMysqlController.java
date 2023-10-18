@@ -8,6 +8,7 @@ import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SessionCallback;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author THT
@@ -53,6 +55,22 @@ public class RedisMysqlController {
         redisTemplate.opsForHash().putAll(Constants.userMark + "12", map);
         return JSONObject.toJSON(map);
     }
+
+    /**
+     * redis 使用redis做消息队列
+     * @param key
+     * @return
+     * @throws InterruptedException
+     */
+    @GetMapping("/get3")
+    public String get3(String key) throws InterruptedException {
+        Object code = redisTemplate.opsForList().rightPop(key,0, TimeUnit.SECONDS);
+        if (code==null){
+            return "数据读取超时！";
+        }
+        return code.toString();
+    }
+
 
     /**
      * 性能优化

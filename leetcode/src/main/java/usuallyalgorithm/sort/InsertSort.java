@@ -1,4 +1,4 @@
-package traverse.sort;
+package usuallyalgorithm.sort;
 
 public class InsertSort implements Sort {
     public InsertSort() {
