@@ -20,6 +20,7 @@ public class TreeController {
     @RequestMapping("/tree")
     public UserDb listUserTree() {
         logger.error("ssssssssssssssssssss");
+        logger.info("是");
         System.out.println(logger.getClass());
         return userDomain.listTreeUser();//asas
     }

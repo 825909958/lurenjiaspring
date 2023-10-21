@@ -51,6 +51,18 @@ spring:
     password: guest
     port: 5672
     username: guest
+    listener:
+      direct:
+        auto-startup: false
+      simple:
+        auto-startup: false
+      stream:
+        auto-startup: false
+  profiles:
+    active: dev
+
+rabbitmq:
+  start: false
 # MyBatis配置
 mybatis:
   # 搜索指定包别名
@@ -62,6 +74,7 @@ mybatis:
 
 # 日志配置
 logging:
+  config: classpath:logback-spring.xml
   level:
     com.example: debug
     org.springframework: warn
