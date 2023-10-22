@@ -30,7 +30,6 @@ public class Demo {
         String replace = classpath.replace(";", "\n");
         System.out.println("Classpath: " + replace);
     }
-
     /**
      * 通过file:读取文件
      * @param args
@@ -50,5 +49,6 @@ public class Demo {
         List<String> strings = new ArrayList<>();
         strings.remove("1");
         System.out.println("strings = " + strings);
-    }
+        //        String classpath = System.getProperty("java.class.path");
+        String classpath = System.getProperty("user.home");
 }
