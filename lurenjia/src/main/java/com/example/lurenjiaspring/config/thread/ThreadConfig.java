@@ -40,5 +40,16 @@ public class ThreadConfig {
 
     }
 
+    /**
+     * 4核8线程，cpu密集型推荐参数
+     * @return
+     */
+    @Bean
+    public ThreadPoolExecutor threadPoolExecutorException() {
+        return new ThreadPoolExecutor(4, 5, 1L, TimeUnit.MINUTES,
+                new LinkedBlockingQueue<>(100), new CustomFactory(), new ThreadPoolExecutor.CallerRunsPolicy());
+
+    }
+
 
 }
