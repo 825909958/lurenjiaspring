@@ -78,9 +78,10 @@ redis:
 # 日志配置
 logging:
   config: classpath:logback-spring.xml
-  level:
-    com.example: debug
-    org.springframework: warn
+  # 这边覆盖了配置文件的配置，规范就在一个地方配置
+#  level:
+#    com.example: debug
+#    org.springframework: warn
 
 # token配置
 token:

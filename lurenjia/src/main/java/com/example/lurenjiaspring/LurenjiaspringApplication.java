@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
+import javax.annotation.PostConstruct;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,8 +30,19 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class LurenjiaspringApplication implements ApplicationRunner {
     private static final Logger logger = LoggerFactory.getLogger(LurenjiaspringApplication.class);
 
+    @PostConstruct
+    public void logIsPrint() {
+        logger.info("info");
+        logger.error("error");
+    }
+
     public static void main(String[] args) {
+        //日志还没加载
+        //logger.info("info");
+        //logger.error("error");
         SpringApplication.run(LurenjiaspringApplication.class, args);
+        logger.info("info");
+        logger.error("error");
     }
 
     //@Bean
@@ -77,7 +89,7 @@ public class LurenjiaspringApplication implements ApplicationRunner {
                 .setDaemon(true)
                 .build()
         );
-        CompletableFuture.runAsync(new Task(),customExecutor);
+        CompletableFuture.runAsync(new Task(), customExecutor);
     }
 
     @Override
