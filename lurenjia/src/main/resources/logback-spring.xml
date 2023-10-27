@@ -44,7 +44,10 @@
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---[%thread]---%-5level---[%c]---[%L]-----[%msg]%n</pattern>
         </encoder>
     </appender>
+<!--    可以指定包名，可以指定具体logger类-->
+<logger>
 
+</logger>
 
     <!-- 线上环境，日志配置 -->
 <!--    <springProfile name="production">-->

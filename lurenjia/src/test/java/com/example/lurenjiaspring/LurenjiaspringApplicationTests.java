@@ -1,24 +1,30 @@
 package com.example.lurenjiaspring;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Arrays;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest(classes = LurenjiaspringApplication.class)
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = LurenjiaspringApplication.class)
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 class LurenjiaspringApplicationTests {
     @Value("${name}")
     private String name;
-    //@Value("${spring.name}")
-    //private String sName;
+    @Value("${spring.application.version}")
+    private String version;
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     @Test
     public void a() {
         System.out.println("name = " + name);
-        //System.out.println("sName = " + sName);
+        System.out.println("version = " + version);
+        System.out.println("applicationName = " + applicationName);
     }
 
     @Test

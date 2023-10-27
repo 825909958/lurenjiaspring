@@ -2,12 +2,13 @@
 spring:
   profiles:
     active: dev
-#  application:
-#    name: ${project.artifactId}
-  #  security:
-#    user:
-#      name: tht
-#      password: tht
+  application:
+    name: @pom.artifactId@
+    version: @project.version@
+#    security:
+    user:
+      name: tht
+      password: tht
   elasticsearch:
     rest:
       uris:
