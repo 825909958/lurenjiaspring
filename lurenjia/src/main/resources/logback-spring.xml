@@ -52,14 +52,14 @@
     <!-- 线上环境，日志配置 -->
 <!--    <springProfile name="production">-->
     <springProfile name="dev">
-        <root level="info">
-            <!--日志输出到文件-->
-            <appender-ref ref="rollingFile"/>
-        </root>
-        <root level="error">
-            <!--日志输出到文件-->
-            <appender-ref ref="errorRollingFile"/>
-        </root>
+<!--        <root level="info">-->
+<!--            &lt;!&ndash;日志输出到文件&ndash;&gt;-->
+<!--            <appender-ref ref="rollingFile"/>-->
+<!--        </root>-->
+<!--        <root level="error">-->
+<!--            &lt;!&ndash;日志输出到文件&ndash;&gt;-->
+<!--            <appender-ref ref="errorRollingFile"/>-->
+<!--        </root>-->
     </springProfile>
 
 
