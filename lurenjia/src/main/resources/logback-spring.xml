@@ -9,10 +9,12 @@
         <!-- encoder 默认配置为PatternLayoutEncoder -->
         <encoder>
             <charset class="java.nio.charset.Charset">UTF-8</charset>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---%magenta([%thread])---[%X{tid}]--%-5level---%blue([%c])---%green([%L])---[%msg]%n</pattern>
-<!--            <pattern>&#45;&#45;%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd
+                HH:mm:ss.SSS}---%magenta([%thread])---[%X{tid}]--%-5level---%blue([%c])---%green([%L])---[%msg]%n
+            </pattern>
+            <!--            <pattern>&#45;&#45;%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>-->
         </encoder>
-        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomStdoutFilter" />
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomStdoutFilter"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -28,7 +30,7 @@
         <encoder>
             <pattern>--%-5level %d{HH:mm:ss} %msg%n</pattern>
         </encoder>
-        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomComStdoutFilter" />
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomComStdoutFilter"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -100,19 +102,23 @@
     <appender name="MYSQL_SQL" class="com.example.lurenjiaspring.config.logconfig.MySQLSqlAppender">
     </appender>
 
-<!--引用mysql自定义appender-->
+    <!--引用mysql自定义appender-com.example.lurenjiaspring.dao
+        1.这个位置的日志全部走这个append->("MYSQL_SQL"),这时候我在log.bebug（""）走的就是这个类下的append;
+        2.没对这个类特殊定义，那么就是走的下面的append,,,,
+        3.总结  所有的log都去走root下面配置的append，否则重写没意义-->
     <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">
         <appender-ref ref="MYSQL_SQL"/>
+        <!--        要重写就不应该走这里了-->
+        <!--        <appender-ref ref="rollingDebugFile"/>-->
     </logger>
-    <!--    可以指定包名，可以指定具体logger类-->
 
-<!--    <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">-->
-<!--        <appender-ref ref="COM_STDOUT"/>-->
-<!--        <appender-ref ref="rollingDebugFile"/>-->
-<!--    </logger>-->
+
+    <!--    可以指定包名，可以指定具体logger类-->
     <!-- 本地、开发环境，日志配置 可以写logback支持的所有节点 -->
     <springProfile name="local,dev">
-        <root level="debug">
+        <!--        根下info级别，或者其他自定义的级别比如com.example、org.springframework,全部走这里的append-->
+        <root level="info">
+            <!--            这个级别下，或者高于这个append全部进入，要想debug只看debug在append去设置过滤器-->
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="COM_STDOUT"/>
             <appender-ref ref="rollingDebugFile"/>
