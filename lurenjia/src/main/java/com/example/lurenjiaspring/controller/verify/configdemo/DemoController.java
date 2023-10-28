@@ -39,8 +39,9 @@ public class DemoController {
     public void a() {
         //System.out.println("context.getBean(\"redisTemplateLocal\") = " + context.getBean("redisTemplate"));
         //System.out.println("context.getBean(\"redisTemplateLocal\") = " + context1.getBean("redisTemplateLocal"));
-redisTemplateMap.forEach((x,y)-> System.out.println("key+ "+x+"value +"+y.hashCode()));
-        System.out.println("restTemplate = " + redisTemplateMap);
+        //输出多个redisTemplateMap
+//redisTemplateMap.forEach((x,y)-> System.out.println("key+ "+x+"value +"+y.hashCode()));
+//        System.out.println("restTemplate = " + redisTemplateMap);
         //System.out.println("redisTemplateLocal = " + redisTemplateLocal);
     }
 

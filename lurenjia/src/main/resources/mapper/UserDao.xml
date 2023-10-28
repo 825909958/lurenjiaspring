@@ -22,11 +22,11 @@
         VALUES (#{userName}, #{nickName}, #{password}, now());
     </insert>
 
-    	<update id="updateUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
-    		update `sys_user` set blance=blance-10, user_name=#{userName},version=version+1 where user_id=1008
-            and blance>10
-<!--                                                                                              and version=#{version}-->
-    	</update>
+    <update id="updateUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
+        update `sys_user` set blance=blance-10, user_name=#{userName},version=version+1 where user_id=1008
+        and blance>10
+        <!--                                                                                              and version=#{version}-->
+    </update>
 
     <select id="queryUserTree" resultType="com.example.lurenjiaspring.entity.UserDb">
         select *

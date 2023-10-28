@@ -21,7 +21,7 @@ public class FilterDemo implements Filter {
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         MDC.put("tid", uuid);
         chain.doFilter(request, response);
-        System.out.println("Response filtered by MyFilter");
+        //System.out.println("Response filtered by MyFilter");
     }
 
     @Override

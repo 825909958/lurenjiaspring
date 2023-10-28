@@ -32,6 +32,7 @@ public class LurenjiaspringApplication implements ApplicationRunner {
 
     @PostConstruct
     public void logIsPrint() {
+        logger.debug("debug");
         logger.info("info");
         logger.error("error");
     }
@@ -41,8 +42,9 @@ public class LurenjiaspringApplication implements ApplicationRunner {
         //logger.info("info");
         //logger.error("error");
         SpringApplication.run(LurenjiaspringApplication.class, args);
-        logger.info("info");
-        logger.error("error");
+        //logger.debug("debug");
+        //logger.info("info");
+        //logger.error("error");
     }
 
     //@Bean

@@ -1,19 +1,62 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="logback_app_name" value="jtest/springboot" />
-    <property name="LOG_PATH" value="${user.dir}/lurenjia/${logback_app_name}/logs" />
-
+    <property name="logback_app_name" value="jtest/springboot"/>
+    <property name="LOG_PATH" value="${user.dir}/lurenjia/${logback_app_name}/logs"/>
+    <!--取spring值-->
+    <springProperty scope="context" name="name" source="spring.application.name" defaultValue="defaultValue"/>
     <!-- 1.控制台输出日志 ConsoleAppender -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoder 默认配置为PatternLayoutEncoder -->
         <encoder>
             <charset class="java.nio.charset.Charset">UTF-8</charset>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---%magenta([%thread])---[%X{tid}]--%-5level---%blue([%c])---%green([%L])---[%msg]%n</pattern>
+<!--            <pattern>&#45;&#45;%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>-->
         </encoder>
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomStdoutFilter" />
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
     </appender>
-
+    <appender name="COM_STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>--%-5level %d{HH:mm:ss} %msg%n</pattern>
+        </encoder>
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomComStdoutFilter" />
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
     <!-- 2.输出到文件 -->
-    <appender name="rollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <appender name="rollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <!--文件路径：可使用ognl-->
+            <fileNamePattern>${LOG_PATH}/${name}debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <!--每个文件最大100MB；保存60天；总文件最多20GB-->
+            <maxFileSize>100MB</maxFileSize>
+            <maxHistory>60</maxHistory>
+            <totalSizeCap>20GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <charset>UTF-8</charset>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---[%thread]---[%X{tid}]---%-5level---[%c]---[%L]-----[%msg]%n</pattern>
+        </encoder>
+        <!--        只看debug日志-->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <appender name="rollingInfoFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
 
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--文件路径：可使用ognl-->
@@ -27,10 +70,14 @@
             <charset>UTF-8</charset>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---[%thread]---[%X{tid}]---%-5level---[%c]---[%L]-----[%msg]%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
     </appender>
 
     <appender name="errorRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
-
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--文件路径：可使用ognl-->
             <fileNamePattern>${LOG_PATH}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
@@ -43,31 +90,43 @@
             <charset>UTF-8</charset>
             <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---[%thread]---%-5level---[%c]---[%L]-----[%msg]%n</pattern>
         </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
     </appender>
-<!--    可以指定包名，可以指定具体logger类-->
-<logger>
 
-</logger>
+    <appender name="MYSQL_SQL" class="com.example.lurenjiaspring.config.logconfig.MySQLSqlAppender">
+    </appender>
 
-    <!-- 线上环境，日志配置 -->
-<!--    <springProfile name="production">-->
-    <springProfile name="dev">
-<!--        <root level="info">-->
-<!--            &lt;!&ndash;日志输出到文件&ndash;&gt;-->
-<!--            <appender-ref ref="rollingFile"/>-->
-<!--        </root>-->
-<!--        <root level="error">-->
-<!--            &lt;!&ndash;日志输出到文件&ndash;&gt;-->
-<!--            <appender-ref ref="errorRollingFile"/>-->
-<!--        </root>-->
-    </springProfile>
+<!--引用mysql自定义appender-->
+    <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">
+        <appender-ref ref="MYSQL_SQL"/>
+    </logger>
+    <!--    可以指定包名，可以指定具体logger类-->
 
-
+<!--    <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">-->
+<!--        <appender-ref ref="COM_STDOUT"/>-->
+<!--        <appender-ref ref="rollingDebugFile"/>-->
+<!--    </logger>-->
     <!-- 本地、开发环境，日志配置 可以写logback支持的所有节点 -->
     <springProfile name="local,dev">
-        <root level="INFO">
-            <!--控制台日志:生产环境建议关掉-->
-            <appender-ref ref="STDOUT" />
+        <root level="debug">
+            <appender-ref ref="STDOUT"/>
+            <appender-ref ref="COM_STDOUT"/>
+            <appender-ref ref="rollingDebugFile"/>
+            <appender-ref ref="rollingInfoFile"/>
+            <appender-ref ref="errorRollingFile"/>
         </root>
     </springProfile>
+
+
+    <!-- 线上环境，日志配置 -->
+    <!--    <springProfile name="production">-->
+    <!--        <root level="error">-->
+    <!--            &lt;!&ndash;日志输出到文件&ndash;&gt;-->
+    <!--            <appender-ref ref="errorRollingFile"/>-->
+    <!--        </root>-->
+    <!--    </springProfile>-->
 </configuration>

@@ -15,10 +15,11 @@ public class PropertiesUtil {
     String name;
     Integer age;
 
-@PostConstruct
-    public void a() {
-        System.out.println("name = " + name);
-        System.out.println("age = " + age);
+    @PostConstruct
+    public void springPropertiesRead() {
+        //spring属性批量读取
+        //System.out.println("name = " + name);
+        //System.out.println("age = " + age);
     }
 
     public static void main(String[] args) {

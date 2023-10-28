@@ -3,6 +3,8 @@ package com.example.lurenjiaspring.domain;
 import com.example.lurenjiaspring.dao.UserDao;
 import com.example.lurenjiaspring.entity.UserDb;
 import com.example.lurenjiaspring.exception.ThtException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserDomain implements IUserDomain {
+    Logger logger = LoggerFactory.getLogger(UserDomain.class);
+
     @Autowired
     private UserDao userDao;
 
@@ -46,7 +50,7 @@ public class UserDomain implements IUserDomain {
         try {
             userDomain.noTransactional(id);
         } catch (Exception e) {
-            System.out.println("inTransactionalException");
+            logger.error("inTransactionalException");
         }
         if (false) {
             throw new ThtException("OutTransactional");

@@ -2,9 +2,21 @@ package aspect.cglib;
 
 import org.springframework.cglib.proxy.Enhancer;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 
 public class Test {
         public static void main(String[] args) {
+            ArrayList<String> strings = new ArrayList<>();
+            strings.add("25151");
+            strings.add("277");
+            strings.add("24564");
+            List<String> collect = strings.stream().sorted().collect(Collectors.toList());
+            System.out.println("collect = " + collect);
+
+
             TargetAction targetAction = new TargetAction("demo1");
             CglibCallBackInvocationHandler handler = new CglibCallBackInvocationHandler(targetAction);
 // aspect.cglib 方式一
