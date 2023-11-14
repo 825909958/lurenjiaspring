@@ -44,4 +44,12 @@ public class Demo {
         System.out.println(collect);
         System.out.println(picTures);
     }
+
+    @Test
+    public void test4() {
+        ArrayList<String> strings = null;
+        for (String string : strings) {
+            System.out.println("string = " + string);
+        }
+    }
 }
