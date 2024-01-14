@@ -2,6 +2,13 @@
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
+    <typeAliases>
+        <!-- 使用package属性指定实体类的包名 -->
+        <package name="com.example.lurenjiaspring.entity"/>
+
+<!--        &lt;!&ndash; 也可以针对特定的实体类进行单独的声明 &ndash;&gt;-->
+<!--        <typeAlias alias="UserEntity" type="com.example.entity.UserEntity"/>-->
+    </typeAliases>
     <plugins>
 <!--        <plugin interceptor="com.sinoservices.xframework.core.ibatis.MybatisSqlInterceptor"/>-->
         <plugin interceptor="com.example.lurenjiaspring.aop.mybatis.MybatisSqlInterceptor"/>

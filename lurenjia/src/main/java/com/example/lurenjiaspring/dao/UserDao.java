@@ -1,7 +1,10 @@
 package com.example.lurenjiaspring.dao;
 
-import com.example.lurenjiaspring.entity.UserDb;
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.example.lurenjiaspring.entity.UserDO;
+import com.example.lurenjiaspring.entity.dto.MybatisManyParam;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -10,15 +13,18 @@ import java.util.Map;
  * @author THT
  */
 @Mapper
-public interface UserDao {
-    public Map<String, Object> queryUserById(Long id);
+public interface UserDao extends BaseMapper<UserDO> {
+    public Map<String, Object> queryUserInfoById(@Param("id") Long id);
 
-    public UserDb queryUserByUserName(String userName);
+    public UserDO queryUserByUserName(String userName);
 
-    public List<UserDb> queryUserTree();
+    public List<UserDO> queryUserTree();
 
-    Integer createUser(UserDb user);
+    Integer createUser(UserDO user);
 
-    Integer updateUser(UserDb user);
+    Integer updateUser(UserDO user);
 
+    List<UserDO> queryDataByManyParam(@Param("req") MybatisManyParam req);
+
+    void createTable(Map<String, Object> req);
 }

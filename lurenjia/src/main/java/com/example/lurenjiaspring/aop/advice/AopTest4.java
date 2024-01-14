@@ -36,7 +36,7 @@ public class AopTest4 {
 
     public static void main(String[] args) {
         ApplicationContext context = new ClassPathXmlApplicationContext("applicationContext.xml");
-        UserService userService = (UserService)context.getBean("userService");
+        UserService userService = (UserService)context.getBean("testRedisMysqlModifyService");
         userService.addUser("此成");
 
     }

@@ -11,12 +11,12 @@ import java.util.Arrays;
 @Configuration
 public class MyFilterConfig {
     @Autowired
-    FilterDemo myFilter;
+    MdcSetTidFilter myFilter;
 
     @Bean
-    public FilterRegistrationBean<FilterDemo> setUpMyFilter() {
+    public FilterRegistrationBean<MdcSetTidFilter> setUpMyFilter() {
 
-        FilterRegistrationBean<FilterDemo> filterRegistrationBean = new FilterRegistrationBean<>();
+        FilterRegistrationBean<MdcSetTidFilter> filterRegistrationBean = new FilterRegistrationBean<>();
 
         filterRegistrationBean.setOrder(2);
         filterRegistrationBean.setFilter(myFilter);

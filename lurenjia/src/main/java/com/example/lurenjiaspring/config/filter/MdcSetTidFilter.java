@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
-public class FilterDemo implements Filter {
+public class MdcSetTidFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         Filter.super.init(filterConfig);
@@ -22,6 +22,7 @@ public class FilterDemo implements Filter {
         MDC.put("tid", uuid);
         chain.doFilter(request, response);
         //System.out.println("Response filtered by MyFilter");
+        MDC.remove("tid");
     }
 
     @Override

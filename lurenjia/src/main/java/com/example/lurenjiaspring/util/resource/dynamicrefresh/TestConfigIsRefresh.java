@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util.resource.curresource;
+package com.example.lurenjiaspring.util.resource.dynamicrefresh;
 
 import org.junit.Test;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;

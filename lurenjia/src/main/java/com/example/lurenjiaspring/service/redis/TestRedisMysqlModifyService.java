@@ -1,9 +1,9 @@
-package com.example.lurenjiaspring.domain.redis;
+package com.example.lurenjiaspring.service.redis;
 
 import cn.hutool.core.collection.CollUtil;
 import com.example.lurenjiaspring.constants.Constants;
 import com.example.lurenjiaspring.dao.UserDao;
-import com.example.lurenjiaspring.entity.UserDb;
+import com.example.lurenjiaspring.entity.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 @Service
-public class UserService {
+public class TestRedisMysqlModifyService {
 
     @Autowired
     UserDao userDao;
@@ -22,9 +22,9 @@ public class UserService {
     /**
      * 并发修改问题，比如没有钱了还在减,如下已经解决
      */
-    public Integer updateUser(String userName, int count) throws Exception {
-        UserDb user = new UserDb();
-        Map<String, Object> map = userDao.queryUserById(1008L);
+    public Integer updateUserAmount(String userName, int count) throws Exception {
+        UserDO user = new UserDO();
+        Map<String, Object> map = userDao.queryUserInfoById(1008L);
         if (CollUtil.isEmpty(map)) {
             throw new Exception("数据不存在");
         }
@@ -42,14 +42,14 @@ public class UserService {
             }
             Thread.sleep(100);
             System.out.println("count = " + count);
-            updateUser(userName, ++count);
+            updateUserAmount(userName, ++count);
         }
         redisTemplate.delete(Constants.userMark + "1008");
         return integer;
     }
 
     public Map<String, Object> selcetUserById(Long id) {
-        return userDao.queryUserById(id);
+        return userDao.queryUserInfoById(id);
     }
 
 
