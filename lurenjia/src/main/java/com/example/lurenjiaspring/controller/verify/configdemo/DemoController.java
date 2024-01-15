@@ -1,6 +1,6 @@
 package com.example.lurenjiaspring.controller.verify.configdemo;
 
-import com.example.lurenjiaspring.entity.UserDb;
+import com.example.lurenjiaspring.entity.UserDO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -47,7 +47,7 @@ public class DemoController {
 
     @RequestMapping("/a")
     public String A(){
-        List<UserDb> list = new ArrayList<>();
+        List<UserDO> list = new ArrayList<>();
 
         Object student = context.getBean("student");
         Object student1 = context1.getBean("student");

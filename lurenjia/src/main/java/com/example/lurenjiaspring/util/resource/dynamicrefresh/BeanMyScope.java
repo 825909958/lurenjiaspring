@@ -1,4 +1,4 @@
-package com.example.lurenjiaspring.util.resource.curresource;
+package com.example.lurenjiaspring.util.resource.dynamicrefresh;
 
 
 import org.springframework.beans.factory.ObjectFactory;

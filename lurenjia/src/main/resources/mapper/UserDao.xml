@@ -4,33 +4,73 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.lurenjiaspring.dao.UserDao">
 
-    <select id="queryUserById" parameterType="Long" resultType="java.util.Map">
+    <select id="queryUserInfoById" parameterType="Long" resultType="java.util.Map">
         select *
         from sys_user
         where user_id = #{id}
     </select>
 
-    <select id="queryUserByUserName" parameterType="String" resultType="com.example.lurenjiaspring.entity.UserDb">
+    <select id="queryUserByUserName" parameterType="String" resultType="com.example.lurenjiaspring.entity.UserDO">
         select *
         from sys_user
         where user_name = #{userName}
     </select>
 
-    <insert id="createUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
+    <insert id="createUser" parameterType="com.example.lurenjiaspring.entity.UserDO" useGeneratedKeys="true" keyProperty="userId">
         INSERT INTO `sys_user`
             (`user_name`, `nick_name`, password, create_time)
         VALUES (#{userName}, #{nickName}, #{password}, now());
     </insert>
 
-    <update id="updateUser" parameterType="UserDb" useGeneratedKeys="true" keyProperty="userId">
+    <update id="updateUser" parameterType="com.example.lurenjiaspring.entity.UserDO" useGeneratedKeys="true" keyProperty="userId">
         update `sys_user` set blance=blance-10, user_name=#{userName},version=version+1 where user_id=1008
         and blance>10
         <!--                                                                                              and version=#{version}-->
     </update>
 
-    <select id="queryUserTree" resultType="com.example.lurenjiaspring.entity.UserDb">
+    <select id="queryUserTree" resultType="com.example.lurenjiaspring.entity.UserDO">
         select *
         from a
     </select>
+    <select id="queryDataByManyParam" resultType="com.example.lurenjiaspring.entity.UserDO">
+        select #{req.userName} as userName,if(#{req.userName}='ry',1,0) as password
+        from ${req.tableName} s
+        left join app_user a on s.user_id = #{req.aId}
+        where a.name = #{req.appName}
+          and s.user_name = #{req.userName}
+    </select>
 
+    <insert id="createTable" parameterType="java.util.Map">
+        CREATE TABLE IF NOT EXISTS ${tableName} (
+        <trim suffixOverrides=",">
+            <foreach collection="columns" item="column" separator=",">
+                ${column.columnName} ${column.columnType}
+                <if test="column.typeConstraint != null">${column.typeConstraint}</if>
+                <if test="column.defaultValue != null and column.defaultValue != '' ">DEFAULT '${column.defaultValue}'
+                </if>
+                <if test="column.notNull">NOT NULL</if>
+                <if test="column.comment != null and column.comment != ''">COMMENT '${column.comment}'</if>
+            </foreach>
+            ,
+            <if test="indexes != null and indexes.size() > 0">
+                <foreach collection="indexes" item="index" separator=",">
+                    ${index}
+                </foreach>
+            </if>
+        </trim>
+        )
+    </insert>
+
+<!--    <insert id="createTable1" parameterType="java.util.Map">-->
+<!--        CREATE TABLE IF NOT EXISTS ${tableName} (-->
+<!--        <foreach collection="columns" item="column" separator=",">-->
+<!--            ${column.name} ${column.type} ${column.constraints}-->
+<!--        </foreach>,-->
+<!--        <if test="indexes != null and indexes.size() > 0">-->
+<!--            <foreach collection="indexes" item="index" separator=",">-->
+<!--                ${index}-->
+<!--            </foreach>-->
+<!--        </if>-->
+<!--        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;-->
+<!--    </insert>-->
 </mapper>

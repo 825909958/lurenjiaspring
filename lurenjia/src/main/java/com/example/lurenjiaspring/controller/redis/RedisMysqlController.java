@@ -2,7 +2,7 @@ package com.example.lurenjiaspring.controller.redis;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.lurenjiaspring.constants.Constants;
-import com.example.lurenjiaspring.domain.redis.UserService;
+import com.example.lurenjiaspring.service.redis.TestRedisMysqlModifyService;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.core.RedisOperations;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,16 +25,16 @@ import java.util.concurrent.TimeUnit;
 public class RedisMysqlController {
 
     @Resource
-    private UserService userService;
+    private TestRedisMysqlModifyService testRedisMysqlModifyService;
 
     // 注入两个会被覆盖，那个被那个覆盖不清楚，所以不要这么写
     @Resource
     private RedisTemplate redisTemplate;
 
     @RequestMapping("/redis/updateUser/{userName}")
-    public void updateData(@PathVariable String userName) throws Exception {
+    public void testRedisMysqlModify(@PathVariable String userName) throws Exception {
         //Thread.sleep(100000);
-        userService.updateUser(userName,0);
+        testRedisMysqlModifyService.updateUserAmount(userName,0);
 
 
     }
@@ -46,7 +46,7 @@ public class RedisMysqlController {
         if (!ObjectUtils.isEmpty(entries)) {
             return JSONObject.toJSON(entries);
         }
-        Map<String, Object> map = userService.selcetUserById(Long.parseLong("12"));
+        Map<String, Object> map = testRedisMysqlModifyService.selcetUserById(Long.parseLong("12"));
 //        Thread.sleep(10000);
         // 序列化时long不能转换成string,java.lang.Integer cannot be cast to java.lang.String,所以不用默认的序列化工具
         map.remove("user_id");
@@ -62,8 +62,8 @@ public class RedisMysqlController {
      * @return
      * @throws InterruptedException
      */
-    @GetMapping("/get3")
-    public String get3(String key) throws InterruptedException {
+    @GetMapping("/getRedisListPop")
+    public String getRedisListPop(String key) throws InterruptedException {
         Object code = redisTemplate.opsForList().rightPop(key,0, TimeUnit.SECONDS);
         if (code==null){
             return "数据读取超时！";

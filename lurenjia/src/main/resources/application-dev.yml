@@ -1,3 +1,5 @@
 #name: tht
 name: ${spring.datasource.url}
 #name: lurenjia
+swich:
+  token: true

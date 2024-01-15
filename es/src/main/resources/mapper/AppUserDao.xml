@@ -3,7 +3,7 @@
 PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.service.AppUserDao">
-	<resultMap id="app_user_mapping" type="AppUser">
+	<resultMap id="app_user_mapping" type="com.entity.AppUser">
 		<result column="id" javaType="Integer" property="id"/>
 		<result column="name" javaType="String" property="name"/>
 		<result column="email" javaType="String" property="email"/>
@@ -20,19 +20,19 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where user_id = #{id}
 	</select>
 
-	<insert id="createUser" parameterType="AppUser" useGeneratedKeys="true" keyProperty="userId">
+	<insert id="createUser" parameterType="com.entity.AppUser" useGeneratedKeys="true" keyProperty="userId">
 		INSERT INTO `AppUser`
 			(`user_name`, `nick_name`)
 		VALUES (#{userName}, #{nickName});
 	</insert>
 
-	<update id="updateUser" parameterType="AppUser" useGeneratedKeys="true" keyProperty="userId">
+	<update id="updateUser" parameterType="com.entity.AppUser" useGeneratedKeys="true" keyProperty="userId">
 		update `AppUser`
 		set user_name=#{userName}
 		where user_id = 1008
 	</update>
 
-	<select id="appUserList" parameterType="AppUser" resultMap="app_user_mapping">
+	<select id="appUserList" parameterType="com.entity.AppUser" resultMap="app_user_mapping">
 		select *
 		from app_user limit 0,1000;
 	</select>

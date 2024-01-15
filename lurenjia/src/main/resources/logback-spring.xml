@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <property name="logback_app_name" value="jtest/springboot"/>
-    <property name="LOG_PATH" value="${user.dir}/lurenjia/${logback_app_name}/logs"/>
+    <property name="logback_app_name" value="tht"/>
+<!--    <property name="LOG_PATH" value="${user.dir}/lurenjia/${logback_app_name}logs"/>-->
+<!--    <property name="LOG_PATH" value="logs"/>-->
+    <property name="LOG_PATH" value="${user.dir}/lurenjia/src/main/resources/logs"/>
     <!--取spring值-->
     <springProperty scope="context" name="name" source="spring.application.name" defaultValue="defaultValue"/>
     <!-- 1.控制台输出日志 ConsoleAppender -->
@@ -9,10 +11,11 @@
         <!-- encoder 默认配置为PatternLayoutEncoder -->
         <encoder>
             <charset class="java.nio.charset.Charset">UTF-8</charset>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---%magenta([%thread])---[%X{tid}]--%-5level---%blue([%c])---%green([%L])---[%msg]%n</pattern>
-<!--            <pattern>&#45;&#45;%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS}---%magenta([%thread])---[%X{tid}]--%-5level---%blue([%c])---%green([%L])---[%msg]%n
+            </pattern>
+            <!--            <pattern>&#45;&#45;%-5level %d{yyyy-MM-dd HH:mm:ss.SSS} %msg%n</pattern>-->
         </encoder>
-        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomStdoutFilter" />
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomStdoutFilter"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -28,7 +31,7 @@
         <encoder>
             <pattern>--%-5level %d{HH:mm:ss} %msg%n</pattern>
         </encoder>
-        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomComStdoutFilter" />
+        <filter class="com.example.lurenjiaspring.config.filter.LogBackCustomComStdoutFilter"/>
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
             <level>DEBUG</level>
             <onMatch>ACCEPT</onMatch>
@@ -39,7 +42,8 @@
     <appender name="rollingDebugFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!--文件路径：可使用ognl-->
-            <fileNamePattern>${LOG_PATH}/${name}debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+<!--            <fileNamePattern>${LOG_PATH}/${name}debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>-->
+            <fileNamePattern>${name}debug.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <!--每个文件最大100MB；保存60天；总文件最多20GB-->
             <maxFileSize>100MB</maxFileSize>
             <maxHistory>60</maxHistory>
@@ -100,19 +104,23 @@
     <appender name="MYSQL_SQL" class="com.example.lurenjiaspring.config.logconfig.MySQLSqlAppender">
     </appender>
 
-<!--引用mysql自定义appender-->
-    <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">
-        <appender-ref ref="MYSQL_SQL"/>
-    </logger>
-    <!--    可以指定包名，可以指定具体logger类-->
-
+    <!--引用mysql自定义appender-com.example.lurenjiaspring.dao
+        1.这个位置的日志全部走这个append->("MYSQL_SQL"),这时候我在log.bebug（""）走的就是这个类下的append;
+        2.没对这个类特殊定义，那么就是走的下面的append,,,,
+        3.总结  所有的log都去走root下面配置的append，否则重写没意义-->
 <!--    <logger name="com.example.lurenjiaspring.dao" level="debug" additivity="false">-->
-<!--        <appender-ref ref="COM_STDOUT"/>-->
-<!--        <appender-ref ref="rollingDebugFile"/>-->
+<!--        <appender-ref ref="MYSQL_SQL"/>-->
+<!--        &lt;!&ndash;        要重写就不应该走这里了&ndash;&gt;-->
+<!--        &lt;!&ndash;        <appender-ref ref="rollingDebugFile"/>&ndash;&gt;-->
 <!--    </logger>-->
+
+
+    <!--    可以指定包名，可以指定具体logger类-->
     <!-- 本地、开发环境，日志配置 可以写logback支持的所有节点 -->
     <springProfile name="local,dev">
-        <root level="debug">
+        <!--        根下info级别，或者其他自定义的级别比如com.example、org.springframework,全部走这里的append-->
+        <root level="info">
+            <!--            这个级别下，或者高于这个append全部进入，要想debug只看debug在append去设置过滤器-->
             <appender-ref ref="STDOUT"/>
             <appender-ref ref="COM_STDOUT"/>
             <appender-ref ref="rollingDebugFile"/>

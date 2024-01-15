@@ -1,7 +1,7 @@
 package usuallyalgorithm.common;
 
 /**
- * @author THT
+ * @author THT 是否是回文数字
  */
 public class Reversals {
     public static boolean isSameAfterReversals(int num) {

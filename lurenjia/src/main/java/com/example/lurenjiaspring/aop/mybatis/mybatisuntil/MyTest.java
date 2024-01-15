@@ -13,7 +13,7 @@ public class MyTest {
                 2L);
         System.out.println(u);
         UserDao mapper = sqlSession.getMapper(UserDao.class);
-        Map<String, Object> stringStringMap = mapper.queryUserById(2L);
+        Map<String, Object> stringStringMap = mapper.queryUserInfoById(2L);
         // getMapper
 //        UserMapper userDao = sqlSession.getMapper(UserMapper.class);
 //        List<User> userList = userDao.getUserList(1);
