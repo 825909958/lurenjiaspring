@@ -2,6 +2,8 @@ package com.example.lurenjiaspring.controller.file;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.io.resource.Resource;
+import cn.hutool.core.io.resource.ResourceUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.WriteDirectionEnum;
@@ -12,10 +14,7 @@ import com.alibaba.excel.write.metadata.fill.FillWrapper;
 import com.example.lurenjiaspring.entity.excel.TestTemplate;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,7 +30,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.lurenjiaspring.security.until.Constants.UTF8;
-import static com.example.lurenjiaspring.util.resource.ConfigLoader.getValue;
 
 /**
  * 下载功能
@@ -44,7 +42,7 @@ public class FileCommon {
     private static String filePath;
 
     @GetMapping("/downLoadFile")
-    public void downLoadFile(HttpServletResponse response) throws Exception {
+    public void downLoadFileByUrL(HttpServletResponse response) throws Exception {
         long starttime = System.currentTimeMillis();
         String path = "https://img-home.csdnimg.cn/images/20230817060240.png";
         String filename = "test";
@@ -90,6 +88,47 @@ public class FileCommon {
         buffer.flip();
         channel.write(buffer);
         fos.close();
+    }
+
+    @Test
+    public void testPath() {
+       //Resource resource = ResourceUtil.getResourceObj("classpath://excelTemplate/testTemplate.xlsx");
+       Resource resource = ResourceUtil.getResourceObj("classpath://com/example/lurenjiaspring/Task.class");
+        String s = resource.readStr(StandardCharsets.UTF_8);
+        System.out.println("s = " + s);
+
+        // 绝对位置
+        URL resource1 = this.getClass().getResource("BigFileUpload.java");
+        String path = resource1.getPath();
+        System.out.println("path = " + path);
+    }
+
+    @Test
+    public void testPath2() {
+        //File file1 = new File("src/test1.txt");
+        //readContext(file1);
+        //File file2 = new File("src/test/test2.txt");
+        String dir = System.getProperty("user.dir");
+        File file3 = new File(dir+"/src/main/java/com/example/lurenjiaspring/controller/file/BigFileUpload.java");
+        //File file3 = new File("E:\\java\\projectting\\lurenjia\\lurenjia\\src\\main\\java\\com\\example\\lurenjiaspring\\controller\\file\\BigFileUpload.java");
+        readContext(file3);
+        //File file4 = new File(FileCommon.class.getResource("BigFileUpload.class").getFile());
+        //readContext(file4);
+
+    }
+
+    public static void readContext(File file) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(file));
+            String len = null;
+
+            while ((len=br.readLine())!=null){
+                System.out.println(len);
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -174,7 +213,6 @@ public class FileCommon {
         WriteSheet writeSheet = EasyExcel.writerSheet("测试sheet").build();
 
         // 按顺序填入 数据格式要求 List<List<Object>>
-
         excelWriter.write(lists, writeSheet);
         //关闭
         excelWriter.finish();
@@ -185,13 +223,12 @@ public class FileCommon {
      */
     public static void exportExcelTemplateTest(List<TestTemplate> list, Map<String, Object> map,
                                                String outFileName, String templateFileName) throws Exception {
-        Resource resource = new PathMatchingResourcePatternResolver().getResource(templateFileName);
+        org.springframework.core.io.Resource resource = new PathMatchingResourcePatternResolver().getResource(templateFileName);
         // 模板写法
         ExcelWriter excelWriter = EasyExcel.write(outFileName).withTemplate(resource.getInputStream()).build();
         //        ExcelWriter excelWriter = EasyExcel.write(getOutputStream(outFileName, response)).withTemplate(templateFileName).build();
         // 模板写设置sheetName会报错
         WriteSheet writeSheet = EasyExcel.writerSheet().build();
-
         FillConfig fillConfig = FillConfig.builder().direction(WriteDirectionEnum.VERTICAL).forceNewRow(Boolean.TRUE).build();
         // {.变量}
         List<Map<String, Object>> maps = new ArrayList<>();
@@ -204,7 +241,6 @@ public class FileCommon {
         excelWriter.fill(maps, fillConfig, writeSheet);
         //  区别上面没有点 {变量}
         excelWriter.fill(map, writeSheet);
-
         //关闭
         excelWriter.finish();
     }
