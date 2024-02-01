@@ -24,43 +24,43 @@
         <java.version>1.8</java.version>
     </properties>
 
-<!--    <profiles>-->
-<!--        <profile>-->
-<!--            <id>DEV</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>true</activeByDefault>-->
-<!--            </activation>-->
-<!--            <properties>-->
-<!--                <jetty-env>jetty-local-tht.xml</jetty-env>-->
-<!--                <jetty-port>8080</jetty-port>-->
-<!--                <secs-env>DEV</secs-env>-->
-<!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--        <profile>-->
-<!--            <id>SIT</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>false</activeByDefault>-->
-<!--            </activation>-->
-<!--            <properties>-->
-<!--                <jetty-env>jetty-sit.xml</jetty-env>-->
-<!--                <jetty-port>8080</jetty-port>-->
-<!--                <secs-env>SIT</secs-env>-->
-<!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--        <profile>-->
-<!--            <id>SIT-20151007</id>-->
-<!--            <activation>-->
-<!--                <activeByDefault>false</activeByDefault>-->
-<!--            </activation>-->
-<!--            <properties>-->
-<!--                <jetty-env>jetty-sit-20151007.xml</jetty-env>-->
-<!--                <jetty-port>8080</jetty-port>-->
-<!--                <secs-env>SIT</secs-env>-->
-<!--            </properties>-->
-<!--        </profile>-->
-<!--    </profiles>-->
+    <!--    <profiles>-->
+    <!--        <profile>-->
+    <!--            <id>DEV</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>true</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <jetty-env>jetty-local-tht.xml</jetty-env>-->
+    <!--                <jetty-port>8080</jetty-port>-->
+    <!--                <secs-env>DEV</secs-env>-->
+    <!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>SIT</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>false</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <jetty-env>jetty-sit.xml</jetty-env>-->
+    <!--                <jetty-port>8080</jetty-port>-->
+    <!--                <secs-env>SIT</secs-env>-->
+    <!--                <cclps.jar.version>0.0.1_SIT-SNAPSHOT</cclps.jar.version>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--        <profile>-->
+    <!--            <id>SIT-20151007</id>-->
+    <!--            <activation>-->
+    <!--                <activeByDefault>false</activeByDefault>-->
+    <!--            </activation>-->
+    <!--            <properties>-->
+    <!--                <jetty-env>jetty-sit-20151007.xml</jetty-env>-->
+    <!--                <jetty-port>8080</jetty-port>-->
+    <!--                <secs-env>SIT</secs-env>-->
+    <!--            </properties>-->
+    <!--        </profile>-->
+    <!--    </profiles>-->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+<!--            <scope>test</scope>-->
         </dependency>
         <!--mysql-->
         <dependency>
@@ -104,10 +104,10 @@
 
 
         <!--es-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
@@ -196,15 +196,42 @@
         </dependency>
 
     </dependencies>
-<!--    <build>-->
-<!--        <resources>-->
-<!--            <resource>-->
-<!--                <directory>src/main/resources</directory>-->
-<!--                <excludes>-->
-<!--                    <exclude>*</exclude>-->
-<!--                </excludes>-->
-<!--            </resource>-->
-<!--        </resources>-->
-<!--    </build>-->
+    <!--    <build>-->
+    <!--        <resources>-->
+    <!--            <resource>-->
+    <!--                <directory>src/main/resources</directory>-->
+    <!--                <excludes>-->
+    <!--                    <exclude>*</exclude>-->
+    <!--                </excludes>-->
+    <!--            </resource>-->
+    <!--        </resources>-->
+    <!--    </build>-->
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources/static</directory>
+                <targetPath>../static/</targetPath>
+            </resource>
+            <resource>
+                <directory>src/main/resources/excelTemplate</directory>
+                <targetPath>../excelTemplate/</targetPath>
+            </resource>
+        </resources>
 
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>2.6.3</version>
+<!--                <configuration>-->
+<!--                    <outputDirectory>../tmp/tpmcat.${application.name}.${server.port}}/target/libE</outputDirectory>-->
+<!--                    <includeSystemScope>true</includeSystemScope>-->
+<!--                </configuration>-->
+            </plugin>
+        </plugins>
+    </build>
 </project>
