@@ -3,3 +3,5 @@ name: ${spring.datasource.url}
 #name: lurenjia
 swich:
   token: true
+file:
+  path: file:target/

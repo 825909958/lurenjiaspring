@@ -83,7 +83,7 @@ public class ConfigLoader {
         //if (null != properties) {
         //    prop.putAll(properties);
         //}
-        InputStream in  = ConfigLoader.class.getClassLoader().getResourceAsStream("a.properties");
+        InputStream in  = ConfigLoader.class.getClassLoader().getResourceAsStream("application-dev.yml");
         try {
             prop.load(in);
         }catch (IOException e){

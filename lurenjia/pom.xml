@@ -46,11 +46,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>com.example</groupId>-->
-<!--            <artifactId>lurenjia</artifactId>-->
-<!--            <version>0.0.1-SNAPSHOT</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>com.example</groupId>-->
+        <!--            <artifactId>lurenjia</artifactId>-->
+        <!--            <version>0.0.1-SNAPSHOT</version>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>it.unibo.tucson</groupId>
             <artifactId>service</artifactId>
@@ -59,11 +59,11 @@
 
 
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-juli &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.apache.tomcat</groupId>-->
-<!--            <artifactId>tomcat-juli</artifactId>-->
-<!--            <version>8.5.15</version>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.apache.tomcat</groupId>-->
+        <!--            <artifactId>tomcat-juli</artifactId>-->
+        <!--            <version>8.5.15</version>-->
+        <!--        </dependency>-->
 
     </dependencies>
 </project>

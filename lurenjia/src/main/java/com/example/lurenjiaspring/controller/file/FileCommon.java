@@ -1,18 +1,24 @@
 package com.example.lurenjiaspring.controller.file;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.enums.WriteDirectionEnum;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.metadata.fill.FillWrapper;
 import com.example.lurenjiaspring.entity.excel.TestTemplate;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URL;
@@ -25,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static com.example.lurenjiaspring.security.until.Constants.UTF8;
+import static com.example.lurenjiaspring.util.resource.ConfigLoader.getValue;
 
 /**
  * 下载功能
@@ -33,6 +40,8 @@ import static com.example.lurenjiaspring.security.until.Constants.UTF8;
  */
 @RestController
 public class FileCommon {
+    @Value("${file.path}")
+    private static String filePath;
 
     @GetMapping("/downLoadFile")
     public void downLoadFile(HttpServletResponse response) throws Exception {
@@ -66,7 +75,7 @@ public class FileCommon {
     }
 
     @Test
-    public  void nioDownload() throws IOException {
+    public void nioDownload() throws IOException {
         String path = System.getProperty("user.dir") + File.separator + "nio.txt";
         FileOutputStream fos = new FileOutputStream(path);
 
@@ -83,8 +92,24 @@ public class FileCommon {
         fos.close();
     }
 
-    @RequestMapping("/exportFuza")
-    public void testTemplate(HttpServletRequest request, HttpServletResponse response) {
+    @Test
+    public void testExcelSort() {
+        try {
+//            exportExcel(new Response(), testTemplates, map, "test.xlsx", property + "testTemplate.xlsx");
+//            exportExcelTest( testTemplates, map, "test.xlsx", property + "file:target/excelTemplate/testTemplate.xlsx");
+            String outFileName = "test.xlsx";
+            List<List<Object>> lists = new ArrayList<>();
+            lists.add(CollectionUtil.newArrayList("1", "2"));
+            exportExcelNewTest(lists, outFileName);
+//            exportExcelNewTest( testTemplates, map, "test.xlsx",  "file:target/excelTemplate/testTemplate.xlsx");
+        } catch (Exception e) {
+            System.out.println("e = " + e);
+            ;
+        }
+    }
+
+    @Test
+    public void testExcelTemplate() throws Exception {
         String property = System.getProperty("user.dir");
         System.out.println("property = " + property);
         List<TestTemplate> testTemplates = new ArrayList<>();
@@ -94,28 +119,23 @@ public class FileCommon {
         testTemplates.add(aaa);
 
         HashMap<String, Object> map = new HashMap<>();
-        map.put("time" , "2023-10-21");
+        map.put("time", "2023-10-21");
+        exportExcelTemplateTest(testTemplates, map, "test.xlsx", "file:target/excelTemplate/testTemplate.xlsx");
 
-        try {
-            exportExcel(response, testTemplates, map, "test.xlsx", property + "\\testTemplate.xlsx");
-        } catch (Exception e) {
-            System.out.println("e = " + e);;
-        }
     }
-
-
 
     /**
      * 导出复杂表头的Excel 先单组数据填充，再多组数据填充
+     *
      * @param response
-     * @param list 多组数据List
-     * @param map 单组数据Map
-     * @param outFileName 导出的Excel名称
+     * @param list             多组数据List
+     * @param map              单组数据Map
+     * @param outFileName      导出的Excel名称
      * @param templateFileName Excel模板的路径名称
      * @throws Exception
      */
-    public static void exportExcel(HttpServletResponse response, List<TestTemplate> list, Map<String,Object> map,
-                                   String outFileName, String templateFileName ) throws Exception{
+    public static void exportExcel(HttpServletResponse response, List<TestTemplate> list, Map<String, Object> map,
+                                   String outFileName, String templateFileName) throws Exception {
         //告诉response下载的是excel文件
         response.setContentType("application/vnd.ms-excel");
         //告诉response使用utf-8编码格式
@@ -124,12 +144,7 @@ public class FileCommon {
         //.write(ExcelUtil.getOutputStream(outFileName, response))是将数据写入文件，并交给response
         templateFileName = "D:\\project\\lurenjiaspring\\lurenjia\\target\\classes\\testTemplate.xlsx";
         ExcelWriter excelWriter = EasyExcel.write(getOutputStream(outFileName, response)).withTemplate(templateFileName).build();
-        //创建Sheet
-        //设置excel Sheet为第几张并设置名称
-        //.writerSheet(0,"第一个")中前面的参数为sheetNo,就是第几张sheet
-        //第二参数为sheet名称
-        //不写就是默认
-        WriteSheet writeSheet  = EasyExcel.writerSheet().build();
+        WriteSheet writeSheet = EasyExcel.writerSheet().build();
         // 这里注意 入参用了forceNewRow 代表在写入list的时候不管list下面有没有空行 都会创建一行，然后下面的数据往后移动。默认 是false，会直接使用下一行，如果没有则创建。
         // forceNewRow 如果设置了true,有个缺点 就是他会把所有的数据都放到内存了，所以慎用
         // 简单的说 如果你的模板有list,且list不是最后一行，下面还有数据需要填充 就必须设置 forceNewRow=true 但是这个就会把所有数据放到内存 会很耗内存
@@ -149,17 +164,62 @@ public class FileCommon {
         excelWriter.finish();
     }
 
+    /**
+     * 顺序写法
+     */
+    public static void exportExcelNewTest(List<List<Object>> lists, String outFileName) throws Exception {
+        // 按顺序写法
+        FileOutputStream fileOutputStream = new FileOutputStream(outFileName);
+        ExcelWriter excelWriter = EasyExcel.write(fileOutputStream).excelType(ExcelTypeEnum.XLSX).build();
+        WriteSheet writeSheet = EasyExcel.writerSheet("测试sheet").build();
+
+        // 按顺序填入 数据格式要求 List<List<Object>>
+
+        excelWriter.write(lists, writeSheet);
+        //关闭
+        excelWriter.finish();
+    }
+
+    /**
+     * 模板写法
+     */
+    public static void exportExcelTemplateTest(List<TestTemplate> list, Map<String, Object> map,
+                                               String outFileName, String templateFileName) throws Exception {
+        Resource resource = new PathMatchingResourcePatternResolver().getResource(templateFileName);
+        // 模板写法
+        ExcelWriter excelWriter = EasyExcel.write(outFileName).withTemplate(resource.getInputStream()).build();
+        //        ExcelWriter excelWriter = EasyExcel.write(getOutputStream(outFileName, response)).withTemplate(templateFileName).build();
+        // 模板写设置sheetName会报错
+        WriteSheet writeSheet = EasyExcel.writerSheet().build();
+
+        FillConfig fillConfig = FillConfig.builder().direction(WriteDirectionEnum.VERTICAL).forceNewRow(Boolean.TRUE).build();
+        // {.变量}
+        List<Map<String, Object>> maps = new ArrayList<>();
+        for (TestTemplate testTemplate : list) {
+            Map<String, Object> stringObjectMap = BeanUtil.beanToMap(testTemplate);
+            maps.add(stringObjectMap);
+
+        }
+        // 模板填充 数据格式要求List<Map<String, Object>>
+        excelWriter.fill(maps, fillConfig, writeSheet);
+        //  区别上面没有点 {变量}
+        excelWriter.fill(map, writeSheet);
+
+        //关闭
+        excelWriter.finish();
+    }
 
     /**
      * 这是ExcelUtil.getOutputStream
      * 这里就是将文件下载交给了浏览器
+     *
      * @return
      */
-    public static OutputStream getOutputStream(String Name, HttpServletResponse response) throws Exception {
+    public static OutputStream getOutputStream(String name, HttpServletResponse response) throws Exception {
         //这里是对文件的重命名
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmm");
         String date = sdf.format(new Date());
-        String fileName = new String(Name.getBytes(), UTF8) + date + ".xlsx";
+        String fileName = new String(name.getBytes(), UTF8) + date + ".xlsx";
         // 这里文件名如果涉及中文一定要使用URL编码,否则会乱码
         response.setContentType("application/force-download");
         response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
