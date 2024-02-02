@@ -11,7 +11,14 @@ import com.alibaba.excel.support.ExcelTypeEnum;
 import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.fill.FillConfig;
 import com.alibaba.excel.write.metadata.fill.FillWrapper;
+import com.example.lurenjiaspring.bean.WaterMarkDTO;
+import com.example.lurenjiaspring.entity.excel.DemoData;
 import com.example.lurenjiaspring.entity.excel.TestTemplate;
+import com.example.lurenjiaspring.util.waterprint.CustomWaterMarkHandler;
+import com.example.lurenjiaspring.util.waterprint.WaterMarkHandler;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -92,13 +99,14 @@ public class FileCommon {
 
     @Test
     public void testPath() {
-       //Resource resource = ResourceUtil.getResourceObj("classpath://excelTemplate/testTemplate.xlsx");
-       Resource resource = ResourceUtil.getResourceObj("classpath://com/example/lurenjiaspring/Task.class");
+        //Resource resource = ResourceUtil.getResourceObj("classpath://excelTemplate/testTemplate.xlsx");
+//       Resource resource = ResourceUtil.getResourceObj("classpath://com/example/lurenjiaspring/Task.class");
+        Resource resource = ResourceUtil.getResourceObj("file:com/example/lurenjiaspring/Task.class");
         String s = resource.readStr(StandardCharsets.UTF_8);
         System.out.println("s = " + s);
 
         // 绝对位置
-        URL resource1 = this.getClass().getResource("BigFileUpload.java");
+        URL resource1 = this.getClass().getResource("");
         String path = resource1.getPath();
         System.out.println("path = " + path);
     }
@@ -109,11 +117,18 @@ public class FileCommon {
         //readContext(file1);
         //File file2 = new File("src/test/test2.txt");
         String dir = System.getProperty("user.dir");
-        File file3 = new File(dir+"/src/main/java/com/example/lurenjiaspring/controller/file/BigFileUpload.java");
+        File file3 = new File(dir + "/src/main/java/com/example/lurenjiaspring/controller/file/BigFileUpload.java");
         //File file3 = new File("E:\\java\\projectting\\lurenjia\\lurenjia\\src\\main\\java\\com\\example\\lurenjiaspring\\controller\\file\\BigFileUpload.java");
         readContext(file3);
         //File file4 = new File(FileCommon.class.getResource("BigFileUpload.class").getFile());
         //readContext(file4);
+    }
+
+    @Test
+    public void testPath3() {
+        // 相对路劲用法
+        URL resource = ResourceUtil.getResource("../../constants/Constants.class", FileCommon.class);
+        System.out.println("resource.getPath() = " + resource.getPath());
 
     }
 
@@ -122,7 +137,7 @@ public class FileCommon {
             BufferedReader br = new BufferedReader(new FileReader(file));
             String len = null;
 
-            while ((len=br.readLine())!=null){
+            while ((len = br.readLine()) != null) {
                 System.out.println(len);
             }
         } catch (IOException e) {
@@ -139,6 +154,7 @@ public class FileCommon {
             String outFileName = "test.xlsx";
             List<List<Object>> lists = new ArrayList<>();
             lists.add(CollectionUtil.newArrayList("1", "2"));
+            lists.add(CollectionUtil.newArrayList("5", "6"));
             exportExcelNewTest(lists, outFileName);
 //            exportExcelNewTest( testTemplates, map, "test.xlsx",  "file:target/excelTemplate/testTemplate.xlsx");
         } catch (Exception e) {
@@ -154,12 +170,16 @@ public class FileCommon {
         List<TestTemplate> testTemplates = new ArrayList<>();
         TestTemplate tht = new TestTemplate("tht", "26");
         TestTemplate aaa = new TestTemplate("aaa", "21");
+        TestTemplate bbb = new TestTemplate("bbb", "33");
         testTemplates.add(tht);
         testTemplates.add(aaa);
+        testTemplates.add(bbb);
 
         HashMap<String, Object> map = new HashMap<>();
         map.put("time", "2023-10-21");
-        exportExcelTemplateTest(testTemplates, map, "test.xlsx", "file:target/excelTemplate/testTemplate.xlsx");
+        Random random = new Random();
+//        exportExcelTemplateTest(testTemplates, map, "test"+random.nextInt(1000)+".xlsx", "file:target/excelTemplate/testTemplate.xlsx");
+        exportExcelTemplateTest(testTemplates, map, "test"+random.nextInt(1000)+".xlsx", "file:target/excelTemplate/testTemplate.xlsx");
 
     }
 
@@ -211,13 +231,42 @@ public class FileCommon {
         FileOutputStream fileOutputStream = new FileOutputStream(outFileName);
         ExcelWriter excelWriter = EasyExcel.write(fileOutputStream).excelType(ExcelTypeEnum.XLSX).build();
         WriteSheet writeSheet = EasyExcel.writerSheet("测试sheet").build();
-
+        lists.add(0, CollectionUtil.newArrayList("名字", "年龄"));
+        lists.add(lists.size(), CollectionUtil.newArrayList("时间", "2023-10-21"));
         // 按顺序填入 数据格式要求 List<List<Object>>
         excelWriter.write(lists, writeSheet);
         //关闭
         excelWriter.finish();
     }
 
+    public static void main(String[] args) {
+            WaterMarkDTO watermark = new WaterMarkDTO();
+            watermark.setContent("我是sveinn，我热爱Java");
+            watermark.setWidth(600);
+            watermark.setHeight(400);
+            watermark.setYAxis(200);
+            // 注意文件是要.xlsx
+            String fileName ="D:/images/testTemplate"+ ".xlsx";
+//导出
+            EasyExcel.write(fileName, DemoData.class)
+                    .inMemory(true)
+                    .sheet("sheet1")
+                    .registerWriteHandler(new WaterMarkHandler(watermark))
+                    .doWrite(data());
+        }
+
+
+    private static List<DemoData> data() {
+        List<DemoData> list = new ArrayList<DemoData>();
+        for (int i = 0; i < 10; i++) {
+            DemoData data = new DemoData();
+            data.setString("字符串" + i);
+            data.setDate(new Date());
+            data.setDoubleData(0.56);
+            list.add(data);
+        }
+        return list;
+    }
     /**
      * 模板写法
      */
@@ -237,6 +286,7 @@ public class FileCommon {
             maps.add(stringObjectMap);
 
         }
+//        addWaterMark(sheet);
         // 模板填充 数据格式要求List<Map<String, Object>>
         excelWriter.fill(maps, fillConfig, writeSheet);
         //  区别上面没有点 {变量}
