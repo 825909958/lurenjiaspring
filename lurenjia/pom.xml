@@ -61,6 +61,10 @@
             <artifactId>ooxml-schemas</artifactId>
             <version>1.4</version>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
 
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-juli &ndash;&gt;-->
         <!--        <dependency>-->
