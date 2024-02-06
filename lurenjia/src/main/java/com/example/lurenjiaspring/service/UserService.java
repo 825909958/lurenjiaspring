@@ -44,6 +44,7 @@ public class UserService extends ServiceImpl<UserDao, UserDO> implements IUserSe
         sqlSessionTemplate = new SqlSessionTemplate(sqlSessionFactory);
     }
 
+    @Override
     public void insertBatchUsers(List<UserDO> userList) {
         List<UserDO> batchList = new ArrayList<>();
         int batchSize = 100; // 设置批处理的大小
@@ -61,6 +62,7 @@ public class UserService extends ServiceImpl<UserDao, UserDO> implements IUserSe
         }
     }
 
+    @Override
     public void insertBatchUsers2(List<UserDO> userList) {
         SqlSession sqlSession = sqlSessionTemplate.getSqlSessionFactory().openSession(ExecutorType.BATCH, false);
         try {
@@ -73,13 +75,13 @@ public class UserService extends ServiceImpl<UserDao, UserDO> implements IUserSe
         } catch (Exception e) {
             sqlSession.rollback();
             e.printStackTrace();
-        }finally {
+        } finally {
             sqlSession.close();
         }
     }
 
     //    @Async
-    @Transactional(rollbackFor = Exception.class,propagation = Propagation.REQUIRED)
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public Map<String, Object> queryUserById(Long id) throws Exception {
         userDao.queryUserInfoById(id);
 //        CompletableFuture<Void> voidCompletableFuture = CompletableFuture.runAsync(() -> {
@@ -137,10 +139,11 @@ public class UserService extends ServiceImpl<UserDao, UserDO> implements IUserSe
 
     /**
      * 通过AopContext获取代理类
+     *
      * @return StudentService代理类
      */
-    private UserService getService(){
-        return Objects.nonNull(AopContext.currentProxy()) ? (UserService) AopContext.currentProxy() : this;
+    private UserService getService() {
+        return (UserService) AopContext.currentProxy();
     }
 
 }

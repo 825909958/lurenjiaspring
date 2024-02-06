@@ -29,7 +29,7 @@ public class RedisMysqlController {
 
     // 注入两个会被覆盖，那个被那个覆盖不清楚，所以不要这么写
     @Resource
-    private RedisTemplate redisTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @RequestMapping("/redis/updateUser/{userName}")
     public void testRedisMysqlModify(@PathVariable String userName) throws Exception {
