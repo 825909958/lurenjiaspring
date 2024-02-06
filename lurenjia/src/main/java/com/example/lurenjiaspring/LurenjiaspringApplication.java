@@ -9,6 +9,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
 
@@ -27,6 +28,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 @EnableAspectJAutoProxy(exposeProxy = true)
 //@ComponentScan(basePackages = "com.controller")
 @MapperScan(basePackages = {"com.service", "com.example.lurenjiaspring.dao"})
+@EnableCaching
 public class LurenjiaspringApplication implements ApplicationRunner {
     private static final Logger logger = LoggerFactory.getLogger(LurenjiaspringApplication.class);
 

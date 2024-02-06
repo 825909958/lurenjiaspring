@@ -5,6 +5,7 @@ import java.util.Optional;
 
 /**
  * @author THT
+ * 多态方式实现策略模式
  */
 public class FactoryDemo {
    static Map<String, Type> MAP;

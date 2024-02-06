@@ -17,6 +17,7 @@ public class WebSocketConfig {
     }
 
     public static void main(String[] args) {
+        // 字符串转两位小数
 //        String a = "1.00";
 //        DecimalFormat decimalFormat = new DecimalFormat("###.##%");
 //

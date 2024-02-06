@@ -56,6 +56,7 @@
             <artifactId>service</artifactId>
             <version>0.2.9</version>
         </dependency>
+<!--        水印相关-->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>ooxml-schemas</artifactId>
@@ -64,6 +65,14 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
         </dependency>
 
         <!--        &lt;!&ndash; https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-juli &ndash;&gt;-->
